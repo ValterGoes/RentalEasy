@@ -20,13 +20,3 @@ npm start
 # Run backend (Node/Express)
 cd ../backend
 node server.js
-
-
----
-
-### 7. **Faça um commit inicial**
-
-```bash
-git init
-git add .
-git commit -m "Initial clean project setup"
