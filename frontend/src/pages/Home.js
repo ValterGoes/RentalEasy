@@ -1,10 +1,25 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdvancedFilter from '../components/AdvancedFilter'; // Ajuste o caminho conforme sua estrutura
+import AdvancedFilter from '../components/AdvancedFilter';
+import API_BASE_URL from '../config';
+import axios from 'axios';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [items, setItems] = useState([]);
 
-  // Função chamada ao clicar em Search no filtro avançado
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/api/items`)
+      .then(res => setItems(res.data))
+      .catch(() => setItems([]));
+  }, []);
+
+  // Extrai locais únicos dos itens disponíveis
+  const availableLocations = [
+    ...new Set(items.filter(i => i.isAvailable).map(i => i.location))
+  ];
+
+  // Função chamada ao buscar
   const handleSearch = ({ location, categories }) => {
     const params = new URLSearchParams();
     if (location) params.append('location', location);
@@ -15,9 +30,9 @@ const Home = () => {
   return (
     <div
       className="bg-contain bg-slate-200 bg-top bg-no-repeat min-h-screen flex flex-col items-center justify-start text-center px-6 pt-10 relative"
-      // adicionar uma imagem de background
+    // style={{ backgroundImage: "url('/images/bg.jpg')" }}
     >
-      <AdvancedFilter onSearch={handleSearch} />
+      <AdvancedFilter onSearch={handleSearch} availableLocations={availableLocations} />
 
       {/* Conteúdo principal da Home */}
       <div className="mt-12 mb-6">

@@ -1,4 +1,3 @@
-// src/components/LocationInput.js
 import { useState, useRef, useEffect } from "react";
 import { MapPin } from "lucide-react";
 
@@ -8,22 +7,16 @@ export default function LocationInput({
     onChange,
     placeholder,
     disabled,
+    suggestions = [],
 }) {
-    const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const inputRef = useRef();
     const suggestionsRef = useRef();
 
-    useEffect(() => {
-        if (value.length > 2) {
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=5`)
-                .then(res => res.json())
-                .then(data => setSuggestions(data))
-                .catch(() => setSuggestions([]));
-        } else {
-            setSuggestions([]);
-        }
-    }, [value]);
+    const filtered = value
+        ? suggestions.filter(loc => loc.toLowerCase().includes(value.toLowerCase()))
+        : suggestions;
+
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -50,25 +43,31 @@ export default function LocationInput({
                     placeholder={placeholder}
                     className="w-full bg-transparent py-2 focus:outline-none"
                     value={value}
-                    onChange={e => { onChange(e.target.value); setShowSuggestions(true); }}
+                    onChange={e => {
+                        onChange(e.target.value);
+                        setShowSuggestions(true);
+                    }}
                     disabled={disabled}
                     ref={inputRef}
                     autoComplete="off"
-                    onFocus={() => { if (value.length > 2) setShowSuggestions(true); }}
+                    onFocus={() => setShowSuggestions(true)}
                 />
             </div>
-            {showSuggestions && suggestions.length > 0 && (
+            {showSuggestions && filtered.length > 0 && (
                 <ul
                     ref={suggestionsRef}
-                    className="absolute left-0 right-0 mt-1 bg-white border rounded-xl shadow-lg z-[1000] max-h-60 overflow-auto"
+                    className="absolute left-0 right-0 mt-14 bg-white border rounded-xl shadow-lg z-[1000] max-h-60 overflow-auto"
                 >
-                    {suggestions.map(s => (
+                    {filtered.map((loc, i) => (
                         <li
-                            key={s.place_id}
+                            key={i}
                             className="px-3 py-2 hover:bg-blue-100 cursor-pointer text-sm"
-                            onMouseDown={() => { onChange(s.display_name); setShowSuggestions(false); }}
+                            onMouseDown={() => {
+                                onChange(loc);
+                                setShowSuggestions(false);
+                            }}
                         >
-                            {s.display_name}
+                            {loc}
                         </li>
                     ))}
                 </ul>

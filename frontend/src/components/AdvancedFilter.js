@@ -18,7 +18,7 @@ const categoryOptions = [
     { label: "Tools", icon: <Wrench size={20} /> },
 ];
 
-const AdvancedFilter = ({ onSearch }) => {
+const AdvancedFilter = ({ onSearch, availableLocations }) => {
     const [location, setLocation] = useState("");
     const [diffReturn, setDiffReturn] = useState(false);
     const [returnLocation, setReturnLocation] = useState("");
@@ -74,6 +74,7 @@ const AdvancedFilter = ({ onSearch }) => {
                 onChange={setLocation}
                 placeholder="Enter location"
                 disabled={loading}
+                suggestions={availableLocations}
             />
 
             {/* Different return location */}
@@ -92,10 +93,12 @@ const AdvancedFilter = ({ onSearch }) => {
                 ) : (
                     <div className="flex items-center h-12 px-3 bg-gray-50 border rounded-xl min-w-[170px] focus-within:ring-2 focus-within:ring-blue-600 mt-2 relative w-full">
                         <LocationInput
-                            value={returnLocation}
-                            onChange={setReturnLocation}
-                            placeholder="Return location"
+                            label="Pick-up & Return Location"
+                            value={location}
+                            onChange={setLocation}
+                            placeholder="Enter location"
                             disabled={loading}
+                            suggestions={availableLocations}
                         />
                         <button
                             type="button"
