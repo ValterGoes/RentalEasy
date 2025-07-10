@@ -15,9 +15,7 @@ const Home = () => {
   return (
     <div
       className="bg-contain bg-slate-200 bg-top bg-no-repeat min-h-screen flex flex-col items-center justify-start text-center px-6 pt-10 relative"
-      // style={{
-      //   backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/images/rv-camper.png')`,
-      // }}
+      // adicionar uma imagem de background
     >
       <AdvancedFilter onSearch={handleSearch} />
 
