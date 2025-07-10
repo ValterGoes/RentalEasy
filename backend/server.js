@@ -14,7 +14,15 @@ const items = [
     id: 1,
     name: "Electric Bike",
     price: 25,
-    image: "/images/electric-bike.jpg",
+    images: [
+      "/images/electric-bike/electric-bike-01.jpg",
+      "/images/electric-bike/electric-bike-02.jpg",
+      "/images/electric-bike/electric-bike-03.jpg",
+      "/images/electric-bike/electric-bike-04.jpg",
+      "/images/electric-bike/electric-bike-05.jpg",
+      "/images/electric-bike/electric-bike-06.jpg"
+    ],
+    image: "/images/electric-bike/electric-bike-01.jpg", 
     category: "Bike",
     location: "São Paulo",
     isAvailable: true,
@@ -25,7 +33,16 @@ const items = [
     id: 2,
     name: "RV Camper",
     price: 130,
-    image: "/images/rv.jpg",
+    images: [
+      "/images/RV-Camper/RV-Camper-01.jpg",
+      "/images/RV-Camper/RV-Camper-02.jpg",
+      "/images/RV-Camper/RV-Camper-03.jpg",
+      "/images/RV-Camper/RV-Camper-04.jpg",
+      "/images/RV-Camper/RV-Camper-05.jpg",
+      "/images/RV-Camper/RV-Camper-06.jpg",
+      "/images/RV-Camper/RV-Camper-07.jpg"
+    ],
+    image: "/images/RV-Camper/RV-Camper-01.jpg",
     category: "RV",
     location: "Campinas",
     isAvailable: true,
@@ -34,12 +51,20 @@ const items = [
   },
   {
     id: 3,
-    name: "Cordless Drill",
+    name: "Hand Power Tools",
     price: 10,
-    image: "/images/drill.jpg",
+    images: [
+      "/images/Hand-Power-Tools/Hand-Power-Tools-01.jpg",
+      "/images/Hand-Power-Tools/Hand-Power-Tools-02.jpg",
+      "/images/Hand-Power-Tools/Hand-Power-Tools-03.jpg",
+      "/images/Hand-Power-Tools/Hand-Power-Tools-04.jpg",
+      "/images/Hand-Power-Tools/Hand-Power-Tools-05.jpg",
+      "/images/Hand-Power-Tools/Hand-Power-Tools-06.jpg"
+    ],
+    image: "/images/Hand-Power-Tools/Hand-Power-Tools-06.jpg",
     category: "Tools",
     location: "Belo Horizonte",
-    isAvailable: false,
+    isAvailable: true,
     description: "Powerful drill, perfect for home projects.",
     features: ["2 batteries", "Charger included"]
   },
@@ -47,10 +72,13 @@ const items = [
     id: 4,
     name: "Electric Scooter",
     price: 20,
+    images: [
+
+    ],
     image: "/images/scooter.jpg",
     category: "Scooter",
     location: "Rio de Janeiro",
-    isAvailable: true,
+    isAvailable: false,
     description: "Lightweight scooter, easy to handle.",
     features: ["Fast charging", "Helmet included"]
   },
@@ -58,6 +86,9 @@ const items = [
     id: 5,
     name: "Compact Car",
     price: 35,
+    images: [
+
+    ],
     image: "/images/compact-car.jpg",
     category: "Car",
     location: "Curitiba",
@@ -69,10 +100,13 @@ const items = [
     id: 6,
     name: "Hammer Drill",
     price: 15,
+    images: [
+
+    ],
     image: "/images/hammer-drill.jpg",
     category: "Tools",
     location: "Brasília",
-    isAvailable: true,
+    isAvailable: false,
     description: "Hammer drill for heavy duty tasks.",
     features: ["Case included", "3 drill bits"]
   }
