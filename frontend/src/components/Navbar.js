@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, UserCircle, Globe, X, LogOut } from 'lucide-react';
+import { Menu, UserCircle, Globe, X, LogOut, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -11,12 +11,22 @@ const languages = [
   { code: 'es', label: 'ES' },
 ];
 
+const profileMenuItems = [
+  { key: 'bookings', label: 'Bookings', to: '/bookings' },
+  { key: 'subscriptions', label: 'Subscriptions', to: '/subscriptions' },
+  { key: 'personal', label: 'Personal Details', to: '/personal-details' },
+  { key: 'profiles', label: 'Profiles', to: '/profiles' },
+  { key: 'help', label: 'Help', to: '/help' },
+];
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const langRef = useRef();
+  const profileRef = useRef();
 
   const { t, i18n } = useTranslation();
 
@@ -26,38 +36,58 @@ const Navbar = () => {
     return () => unsub();
   }, []);
 
-  // Fecha menu de idioma ao clicar fora
+  // Fecha menus ao clicar fora
   useEffect(() => {
     const handleClick = (e) => {
-      // só fecha se não for botão de menu (evita conflito de clique)
-      if (
-        langRef.current &&
-        !langRef.current.contains(e.target)
-      ) {
-        setLangMenuOpen(false);
-      }
+      if (langRef.current && !langRef.current.contains(e.target)) setLangMenuOpen(false);
+      if (profileRef.current && !profileRef.current.contains(e.target)) setProfileMenuOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
-  
 
   const handleProfileClick = () => {
-    if (user) navigate("/profile");
+    if (user) setProfileMenuOpen((open) => !open);
     else navigate("/login");
   };
 
   const handleLogout = () => {
     signOut(auth).then(() => {
+      setProfileMenuOpen(false);
       setIsOpen(false);
       navigate('/');
     });
   };
+  
 
   const handleLangChange = (code) => {
     i18n.changeLanguage(code);
     setLangMenuOpen(false);
   };
+
+  // Função para renderizar menu de perfil
+  const renderProfileMenu = () => (
+    <div className="absolute right-0 mt-2 w-56 rounded shadow bg-white border z-[999]">
+      {profileMenuItems.map(item => (
+        <Link
+          to={item.to}
+          key={item.key}
+          className="block w-full text-left px-4 py-2 hover:bg-blue-50 text-gray-700"
+          onClick={() => setProfileMenuOpen(false)}
+        >
+          {t(item.label)}
+        </Link>
+      ))}
+      <button
+        onMouseDown={handleLogout}
+        className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-red-50 font-semibold border-t"
+      >
+        <LogOut size={20} className="mr-2" />
+        {t('Log out')}
+      </button>
+
+    </div>
+  );
 
   return (
     <nav className="bg-white shadow sticky top-0 z-50">
@@ -77,8 +107,6 @@ const Navbar = () => {
         </div>
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6 text-gray-800 font-bold text-xl">
-          <Link to="/items" className="hover:text-blue-500">{t("Browse")}</Link>
-          <Link to="/checkout" className="hover:text-blue-500">{t("Checkout")}</Link>
           {/* Idioma Dropdown */}
           <div className="relative" ref={langRef}>
             <button
@@ -108,9 +136,8 @@ const Navbar = () => {
               </div>
             )}
           </div>
-
-          {/* Perfil + Logout */}
-          <div className="flex items-center space-x-1">
+          {/* Perfil + Logout Dropdown */}
+          <div className="relative" ref={profileRef}>
             <button
               className="flex items-center cursor-pointer text-gray-800 hover:text-blue-700 focus:outline-none"
               onClick={handleProfileClick}
@@ -121,16 +148,9 @@ const Navbar = () => {
                   ? (user.displayName ? user.displayName : t("My Account"))
                   : t("Log in | Register")}
               </span>
+              {user && <ChevronDown size={20} className="ml-2" />}
             </button>
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="ml-4 text-red-500 hover:text-red-700 flex items-center"
-                title="Log out"
-              >
-                <LogOut size={22} />
-              </button>
-            )}
+            {user && profileMenuOpen && renderProfileMenu()}
           </div>
         </div>
         {/* Mobile Menu */}
@@ -150,9 +170,11 @@ const Navbar = () => {
               <X size={24} />
             </button>
           </div>
+          
           <div className="flex flex-col space-y-4 px-6 mt-6 text-gray-800 font-bold text-lg">
             <Link to="/items" className="hover:text-blue-500" onClick={() => setIsOpen(false)}>{t("Browse")}</Link>
             <Link to="/checkout" className="hover:text-blue-500" onClick={() => setIsOpen(false)}>{t("Checkout")}</Link>
+            
             {/* Idioma Dropdown Mobile */}
             <div className="relative" ref={langRef}>
               <button
@@ -182,10 +204,12 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <div className="flex items-center space-x-3 mt-8">
+
+            {/* Perfil Dropdown Mobile */}
+            <div className="relative" ref={profileRef}>
               <button
                 className="flex items-center cursor-pointer text-gray-800 hover:text-blue-700 focus:outline-none"
-                onClick={() => { setIsOpen(false); handleProfileClick(); }}
+                onClick={handleProfileClick}
               >
                 <UserCircle size={24} />
                 <span className="ml-1 text-base font-normal">
@@ -193,15 +217,28 @@ const Navbar = () => {
                     ? (user.displayName ? user.displayName : t("My Account"))
                     : t("Log in | Register")}
                 </span>
+                {user && <ChevronDown size={20} className="ml-2" />}
               </button>
-              {user && (
-                <button
-                  onClick={() => { setIsOpen(false); handleLogout(); }}
-                  className="ml-2 text-red-500 hover:text-red-700 flex items-center"
-                  title="Log out"
-                >
-                  <LogOut size={22} />
-                </button>
+              {user && profileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-56 rounded shadow bg-white border z-[999]">
+                  {profileMenuItems.map(item => (
+                    <Link
+                      to={item.to}
+                      key={item.key}
+                      className="block w-full text-left px-4 py-2 hover:bg-blue-50 text-gray-700"
+                      onClick={() => { setProfileMenuOpen(false); setIsOpen(false); }}
+                    >
+                      {t(item.label)}
+                    </Link>
+                  ))}
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-red-50 font-semibold border-t"
+                  >
+                    <LogOut size={20} className="mr-2" />
+                    {t('Log out')}
+                  </button>
+                </div>
               )}
             </div>
           </div>
