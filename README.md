@@ -9,7 +9,6 @@ RentalEasy is a modern web and mobile platform for renting vehicles, bikes, tool
 cd frontend
 npm install
 
-# (If using backend)
 cd ../backend
 npm install
 
@@ -19,4 +18,4 @@ npm start
 
 # Run backend (Node/Express)
 cd ../backend
-node server.js
+npm start
