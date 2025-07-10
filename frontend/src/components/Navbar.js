@@ -6,10 +6,11 @@ import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const languages = [
-  { code: 'en', label: 'EN' },
-  { code: 'pt', label: 'PT' },
-  { code: 'es', label: 'ES' },
+  { code: 'en', label: 'EN', full: 'English' },
+  { code: 'pt', label: 'PT', full: 'Português' },
+  { code: 'es', label: 'ES', full: 'Español' },
 ];
+
 
 const profileMenuItems = [
   { key: 'bookings', label: 'Bookings', to: '/bookings' },
@@ -130,7 +131,7 @@ const Navbar = () => {
                     className={`block w-full text-left px-4 py-2 hover:bg-blue-50 ${i18n.language === lang.code ? "bg-blue-100 text-blue-600 font-bold" : ""
                       }`}
                   >
-                    {lang.label}
+                    {lang.full}
                   </button>
                 ))}
               </div>
@@ -198,7 +199,7 @@ const Navbar = () => {
                       className={`block w-full text-left px-4 py-2 hover:bg-blue-50 ${i18n.language === lang.code ? "bg-blue-100 text-blue-600 font-bold" : ""
                         }`}
                     >
-                      {lang.label}
+                      {lang.full}
                     </button>
                   ))}
                 </div>
