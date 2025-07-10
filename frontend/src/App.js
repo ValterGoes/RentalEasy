@@ -12,7 +12,7 @@ function Layout() {
   const location = useLocation();
 
   // Não exibir Navbar e Footer nas páginas de login e registro
-  const hideLayoutPaths = ['/login', '/register', /^\/items\/[^\/]+$/];
+  const hideLayoutPaths = ['/login', '/register'];
 
   const shouldShowLayout = !hideLayoutPaths.includes(location.pathname);
 
