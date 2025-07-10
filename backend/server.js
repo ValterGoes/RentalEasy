@@ -24,7 +24,7 @@ const items = [
     ],
     image: "/images/electric-bike/electric-bike-01.jpg", 
     category: "Bike",
-    location: "São Paulo",
+    location: "San José, CA",
     isAvailable: true,
     description: "Electric bike, comfortable and efficient.",
     features: ["Battery 60km", "Helmet included", "Insurance"]
@@ -39,12 +39,11 @@ const items = [
       "/images/RV-Camper/RV-Camper-03.jpg",
       "/images/RV-Camper/RV-Camper-04.jpg",
       "/images/RV-Camper/RV-Camper-05.jpg",
-      "/images/RV-Camper/RV-Camper-06.jpg",
-      "/images/RV-Camper/RV-Camper-07.jpg"
+      "/images/RV-Camper/RV-Camper-06.jpg"
     ],
     image: "/images/RV-Camper/RV-Camper-01.jpg",
     category: "RV",
-    location: "Campinas",
+    location: "San José, CA",
     isAvailable: true,
     description: "Spacious RV for a family vacation.",
     features: ["AC", "Shower", "Kitchen"]
@@ -63,7 +62,7 @@ const items = [
     ],
     image: "/images/Hand-Power-Tools/Hand-Power-Tools-06.jpg",
     category: "Tools",
-    location: "Belo Horizonte",
+    location: "San José, CA",
     isAvailable: true,
     description: "Powerful drill, perfect for home projects.",
     features: ["2 batteries", "Charger included"]
@@ -77,7 +76,7 @@ const items = [
     ],
     image: "/images/scooter.jpg",
     category: "Scooter",
-    location: "Rio de Janeiro",
+    location: "San José, CA",
     isAvailable: false,
     description: "Lightweight scooter, easy to handle.",
     features: ["Fast charging", "Helmet included"]
@@ -91,7 +90,7 @@ const items = [
     ],
     image: "/images/compact-car.jpg",
     category: "Car",
-    location: "Curitiba",
+    location: "San José, CA",
     isAvailable: false,
     description: "Fuel efficient compact car.",
     features: ["Automatic", "AC"]
@@ -105,7 +104,7 @@ const items = [
     ],
     image: "/images/hammer-drill.jpg",
     category: "Tools",
-    location: "Brasília",
+    location: "San José, CA",
     isAvailable: false,
     description: "Hammer drill for heavy duty tasks.",
     features: ["Case included", "3 drill bits"]
