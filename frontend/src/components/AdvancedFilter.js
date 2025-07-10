@@ -207,7 +207,7 @@ const AdvancedFilter = ({ onSearch }) => {
                         ) : (
                             <>
                                 <Search className="mr-2" size={22} />
-                                Show cars
+                                Search
                             </>
                         )}
                     </button>
