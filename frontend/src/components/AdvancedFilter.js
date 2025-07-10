@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import {
-    MapPin, Bike, Car, Caravan, Wrench,
-    Search, Loader2, PlusCircle, ArrowLeft, CalendarDays, Clock
-} from "lucide-react";
+// src/components/AdvancedFilter.js
+import { useState } from "react";
+import CategorySelector from './CategorySelector';
+import LocationInput from './LocationInput';
+import DateTimeRange from './DateTimeRange';
+import { Bike, Car, Caravan, Wrench, PlusCircle, ArrowLeft } from "lucide-react";
 
-// Utilitário para datas no formato YYYY-MM-DD
 function getDateString(offsetDays = 0) {
     const d = new Date();
     d.setDate(d.getDate() + offsetDays);
@@ -28,11 +28,7 @@ const AdvancedFilter = ({ onSearch }) => {
     const [returnDate, setReturnDate] = useState(getDateString(1));
     const [returnTime, setReturnTime] = useState('');
     const [loading, setLoading] = useState(false);
-    const [show, setShow] = useState(false);
-
-    useEffect(() => {
-        setTimeout(() => setShow(true), 100);
-    }, []);
+    const [showModal, setShowModal] = useState(false);
 
     const handleCategoryToggle = (category) => {
         setSelectedCategories((prev) =>
@@ -56,163 +52,109 @@ const AdvancedFilter = ({ onSearch }) => {
                 returnTime,
             });
             setLoading(false);
+            setShowModal(false);
         }, 1200);
     };
 
     return (
         <form
             onSubmit={handleSubmit}
-            className={`
-        bg-white shadow-lg rounded-xl px-4 py-4 max-w-6xl w-full mx-auto mt-6
-        flex flex-col gap-4
-        transition-all duration-700
-        ${show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-5"}
-      `}
-            style={{ pointerEvents: loading ? "none" : "auto", opacity: loading ? 0.7 : 1 }}
+            className="bg-white shadow-lg rounded-xl px-4 py-4 max-w-6xl w-full mx-auto flex flex-col gap-2"
         >
-            {/* Categorias */}
-            <div className="flex flex-wrap gap-2 justify-start w-full mb-2">
-                {categoryOptions.map(({ label, icon }) => (
+            <CategorySelector
+                options={categoryOptions}
+                selected={selectedCategories}
+                onToggle={handleCategoryToggle}
+                disabled={loading}
+            />
+
+            <LocationInput
+                label="Pick-up & Return Location"
+                value={location}
+                onChange={setLocation}
+                placeholder="Enter location"
+                disabled={loading}
+            />
+
+            {/* Different return location */}
+            <div className="flex flex-col w-full">
+                {!diffReturn ? (
                     <button
-                        key={label}
                         type="button"
-                        className={`flex items-center justify-center px-6 py-2 rounded-3xl font-semibold
-              ${selectedCategories.includes(label)
-                                ? "bg-blue-600 text-white"
-                                : "bg-white text-gray-800 border border-gray-800 hover:border-blue-600 hover:bg-blue-600 hover:text-white"
-                            } hover:bg-blue-100 transition`}
-                        onClick={() => handleCategoryToggle(label)}
+                        className="flex items-center text-blue-600 hover:text-blue-800 transition text-xs font-medium whitespace-nowrap h-10 px-3 mt-2 self-end"
+                        onClick={() => setDiffReturn(true)}
                         disabled={loading}
+                        style={{ minWidth: 180 }}
                     >
-                        {icon}
-                        <span className="text-sm ml-2">{label}</span>
+                        <PlusCircle size={18} className="mr-1" />
+                        Different return location
                     </button>
-                ))}
+                ) : (
+                    <div className="flex items-center h-12 px-3 bg-gray-50 border rounded-xl min-w-[170px] focus-within:ring-2 focus-within:ring-blue-600 mt-2 relative w-full">
+                        <LocationInput
+                            value={returnLocation}
+                            onChange={setReturnLocation}
+                            placeholder="Return location"
+                            disabled={loading}
+                        />
+                        <button
+                            type="button"
+                            className="ml-2 text-blue-600 hover:text-blue-800"
+                            onClick={() => setDiffReturn(false)}
+                            disabled={loading}
+                            tabIndex={-1}
+                            aria-label="Back"
+                        >
+                            <ArrowLeft size={18} />
+                        </button>
+                    </div>
+                )}
             </div>
 
-            {/* Linha principal */}
-            <div className="flex flex-col md:flex-row gap-4 w-full items-end">
-                {/* Localização + botão Different return location */}
-                {/* Location */}
-                <div className="flex-1 min-w-[220px] flex flex-col">
-                    <label className="text-xs font-semibold mb-1 text-left block">Pick-up & Return Location</label>
-                    <div className="flex items-center gap-2 w-full">
-                        <div className="flex items-center border rounded-xl px-2 bg-gray-50 h-12 flex-1 focus-within:ring-2 focus-within:ring-blue-600">
-                            <MapPin className="text-gray-400 mr-2" size={18} />
-                            <input
-                                type="text"
-                                placeholder="Enter location"
-                                className="w-full bg-transparent py-2 focus:outline-none"
-                                value={location}
-                                onChange={(e) => setLocation(e.target.value)}
-                                disabled={loading}
-                                autoFocus={!diffReturn}
-                            />
-                        </div>
-                        {!diffReturn ? (
-                            <button
-                                type="button"
-                                className="flex items-center text-blue-600 hover:text-blue-800 transition text-xs font-medium whitespace-nowrap h-12 px-3"
-                                onClick={() => setDiffReturn(true)}
-                                disabled={loading}
-                                style={{ minWidth: 180 }}
-                            >
-                                <PlusCircle size={18} className="mr-1" />
-                                Different return location
-                            </button>
-                        ) : (
-                            <div className="flex items-center h-12 px-3 bg-gray-50 border rounded-xl min-w-[170px] focus-within:ring-2 focus-within:ring-blue-600">
-                                <MapPin className="text-gray-400 mr-2" size={20} />
-                                <input
-                                    type="text"
-                                    placeholder="Return location"
-                                    className="w-full bg-transparent py-2 focus:outline-none"
-                                    value={returnLocation}
-                                    onChange={(e) => setReturnLocation(e.target.value)}
-                                    disabled={loading}
-                                    autoFocus={diffReturn}
-                                />
-                                <button
-                                    type="button"
-                                    className="ml-2 text-blue-600 hover:text-blue-800"
-                                    onClick={() => setDiffReturn(false)}
-                                    disabled={loading}
-                                    tabIndex={-1}
-                                    aria-label="Back"
-                                >
-                                    <ArrowLeft size={18} />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Pick-up */}
-                <div className="w-[230px]">
-                    <label className="text-xs font-semibold mb-1 text-left block">Pick-up date</label>
-                    <div className="flex items-center border rounded-xl bg-gray-50 h-12 px-2 focus-within:ring-2 focus-within:ring-blue-600">
-                        <input
-                            type="date"
-                            className="w-[115px] bg-transparent focus:outline-none text-black"
-                            value={pickupDate}
-                            onChange={(e) => setPickupDate(e.target.value)}
-                            disabled={loading}
-                        />
-                        <span className="mx-2 h-6 border-l border-gray-200" />
-                        <input
-                            type="time"
-                            className="w-[70px] bg-transparent focus:outline-none text-black"
-                            value={pickupTime}
-                            onChange={(e) => setPickupTime(e.target.value)}
-                            disabled={loading}
-                        />
-                    </div>
-                </div>
-
-                {/* Return */}
-                <div className="w-[230px]">
-                    <label className="text-xs font-semibold mb-1 text-left block">Return date</label>
-                    <div className="flex items-center border rounded-xl bg-gray-50 h-12 px-2 focus-within:ring-2 focus-within:ring-blue-600">
-                        <input
-                            type="date"
-                            className="w-[115px] bg-transparent focus:outline-none text-black"
-                            value={returnDate}
-                            onChange={(e) => setReturnDate(e.target.value)}
-                            disabled={loading}
-                        />
-                        <span className="mx-2 h-6 border-l border-gray-200" />
-                        <input
-                            type="time"
-                            className="w-[70px] bg-transparent focus:outline-none text-black"
-                            value={returnTime}
-                            onChange={(e) => setReturnTime(e.target.value)}
-                            disabled={loading}
-                        />
-                    </div>
-                </div>
-
-
-                {/* Botão Search */}
-                <div className="flex items-end">
-                    <button
-                        type="submit"
-                        className="flex items-center justify-end h-12 px-7 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-800 transition disabled:opacity-60 w-auto"
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <>
-                                <Loader2 className="animate-spin mr-2" size={22} />
-                                Searching...
-                            </>
-                        ) : (
-                            <>
-                                <Search className="mr-2" size={22} />
-                                Search
-                            </>
-                        )}
-                    </button>
-                </div>
+            {/* Mobile: Botão para abrir datas/horas no modal */}
+            <div className="block md:hidden mt-3">
+                <button
+                    type="button"
+                    className="w-full bg-blue-600 text-white rounded-xl py-3 font-bold text-lg hover:bg-blue-800 transition"
+                    onClick={() => setShowModal(true)}
+                >
+                    Select pick-up & return
+                </button>
             </div>
+
+            {/* Desktop: Campos de datas/horas e Search sempre visíveis */}
+            <div className="hidden md:flex">
+                <DateTimeRange
+                    pickupDate={pickupDate}
+                    setPickupDate={setPickupDate}
+                    pickupTime={pickupTime}
+                    setPickupTime={setPickupTime}
+                    returnDate={returnDate}
+                    setReturnDate={setReturnDate}
+                    returnTime={returnTime}
+                    setReturnTime={setReturnTime}
+                    loading={loading}
+                    onSubmit={handleSubmit}
+                />
+            </div>
+
+            {/* Modal para datas/horas no mobile */}
+            {showModal && (
+                <DateTimeRange
+                    pickupDate={pickupDate}
+                    setPickupDate={setPickupDate}
+                    pickupTime={pickupTime}
+                    setPickupTime={setPickupTime}
+                    returnDate={returnDate}
+                    setReturnDate={setReturnDate}
+                    returnTime={returnTime}
+                    setReturnTime={setReturnTime}
+                    loading={loading}
+                    onSubmit={handleSubmit}
+                    modal={showModal}
+                    setModal={setShowModal}
+                />
+            )}
         </form>
     );
 };

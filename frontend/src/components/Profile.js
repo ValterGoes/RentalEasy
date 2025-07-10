@@ -40,13 +40,18 @@ const Profile = ({ mobile, closeMobileMenu }) => {
         else navigate("/login");
     };
 
-    const handleLogout = () => {
-        signOut(auth).then(() => {
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
             setProfileMenuOpen(false);
             if (mobile && closeMobileMenu) closeMobileMenu();
             navigate('/');
-        });
+        } catch (err) {
+            // Opcional: trate o erro ou mostre alerta para o usuário
+            console.error("Erro ao deslogar:", err);
+        }
     };
+      
 
     const renderProfileMenu = () => (
         <div className="absolute right-0 mt-2 w-56 rounded shadow bg-white border z-[999]">
