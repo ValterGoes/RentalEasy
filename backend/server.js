@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -9,61 +8,93 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/items', (req, res) => {
-  res.json([
+// Lista de itens simulados (adicione mais campos se desejar)
+const items = [
   {
-    "id": 1,
-    "name": "Electric Bike",
-    "price": 25,
-    "image": "/images/electric-bike.jpg",
-    "category": "Bike"
+    id: 1,
+    name: "Electric Bike",
+    price: 25,
+    image: "/images/electric-bike.jpg",
+    category: "Bike",
+    location: "São Paulo",
+    isAvailable: true,
+    description: "Electric bike, comfortable and efficient.",
+    features: ["Battery 60km", "Helmet included", "Insurance"]
   },
   {
-    "id": 2,
-    "name": "RV Camper",
-    "price": 130,
-    "image": "/images/rv.jpg",
-    "category": "RV"
+    id: 2,
+    name: "RV Camper",
+    price: 130,
+    image: "/images/rv.jpg",
+    category: "RV",
+    location: "Campinas",
+    isAvailable: true,
+    description: "Spacious RV for a family vacation.",
+    features: ["AC", "Shower", "Kitchen"]
   },
   {
-    "id": 3,
-    "name": "Cordless Drill",
-    "price": 10,
-    "image": "/images/drill.jpg",
-    "category": "Tools"
+    id: 3,
+    name: "Cordless Drill",
+    price: 10,
+    image: "/images/drill.jpg",
+    category: "Tools",
+    location: "Belo Horizonte",
+    isAvailable: false,
+    description: "Powerful drill, perfect for home projects.",
+    features: ["2 batteries", "Charger included"]
   },
   {
-    "id": 4,
-    "name": "Electric Scooter",
-    "price": 20,
-    "image": "/images/scooter.jpg",
-    "category": "Scooter"
+    id: 4,
+    name: "Electric Scooter",
+    price: 20,
+    image: "/images/scooter.jpg",
+    category: "Scooter",
+    location: "Rio de Janeiro",
+    isAvailable: true,
+    description: "Lightweight scooter, easy to handle.",
+    features: ["Fast charging", "Helmet included"]
   },
   {
-    "id": 5,
-    "name": "Compact Car",
-    "price": 35,
-    "image": "/images/compact-car.jpg",
-    "category": "Car"
+    id: 5,
+    name: "Compact Car",
+    price: 35,
+    image: "/images/compact-car.jpg",
+    category: "Car",
+    location: "Curitiba",
+    isAvailable: false,
+    description: "Fuel efficient compact car.",
+    features: ["Automatic", "AC"]
   },
   {
-    "id": 6,
-    "name": "Hammer Drill",
-    "price": 15,
-    "image": "/images/hammer-drill.jpg",
-    "category": "Tools"
+    id: 6,
+    name: "Hammer Drill",
+    price: 15,
+    image: "/images/hammer-drill.jpg",
+    category: "Tools",
+    location: "Brasília",
+    isAvailable: true,
+    description: "Hammer drill for heavy duty tasks.",
+    features: ["Case included", "3 drill bits"]
   }
-]);
+];
+
+// Endpoint para todos os itens
+app.get('/api/items', (req, res) => {
+  res.json(items);
 });
 
+// Endpoint para detalhe de um item
 app.get('/api/items/:id', (req, res) => {
-  const id = req.params.id;
-  res.json({ id, name: 'Electric Bike', price: 20, description: 'Comfortable electric bike.' });
+  const item = items.find(i => i.id == req.params.id);
+  if (!item) return res.status(404).send('Item not found');
+  res.json(item);
 });
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// dego
+
+
 // login - sign up
 const users = []; // Para demonstração; use banco de dados em produção!
 
