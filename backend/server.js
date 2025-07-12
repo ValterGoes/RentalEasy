@@ -62,7 +62,7 @@ const items = [
     ],
     image: "/images/Hand-Power-Tools/Hand-Power-Tools-06.jpg",
     category: "Tools",
-    location: "San José, CA",
+    location: "Los Altos, CA",
     isAvailable: true,
     description: "Powerful drill, perfect for home projects.",
     features: ["2 batteries", "Charger included"]
