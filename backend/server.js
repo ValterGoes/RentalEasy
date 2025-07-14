@@ -75,7 +75,7 @@ const items = [
 
     ],
     image: "/images/scooter.jpg",
-    category: "Scooter",
+    category: "Bike",
     location: "San José, CA",
     isAvailable: false,
     description: "Lightweight scooter, easy to handle.",
@@ -91,7 +91,7 @@ const items = [
     image: "/images/compact-car.jpg",
     category: "Car",
     location: "San José, CA",
-    isAvailable: false,
+    isAvailable: true,
     description: "Fuel efficient compact car.",
     features: ["Automatic", "AC"]
   },
