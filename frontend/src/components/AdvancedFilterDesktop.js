@@ -24,7 +24,7 @@ const AdvancedFilterDesktop = ({
     setReturnTime,
     handleSubmit
 }) => (
-    <div className="bg-white shadow-lg rounded-xl px-4 py-4 max-w-6xl w-full mx-auto">
+    <div className="bg-white shadow-lg rounded-xl px-4 py-4 max-w-7xl w-full mx-auto">
         <CategorySelector
             options={categoryOptions}
             selected={selectedCategories}
@@ -88,14 +88,14 @@ const AdvancedFilterDesktop = ({
                     <div className="flex gap-2 w-full">
                         <input
                             type="date"
-                            className="bg-gray-50 border rounded py-2 px-2 w-[115px] text-center"
+                            className="bg-gray-50 border rounded py-2 px-2 w-[115px] text-center text-[14px]"
                             value={pickupDate}
                             onChange={e => setPickupDate(e.target.value)}
                             disabled={loading}
                         />
                         <input
                             type="time"
-                            className="bg-gray-50 border rounded py-2 px-2 w-[90px] text-center"
+                            className="bg-gray-50 border rounded py-2 px-2 text-center"
                             value={pickupTime}
                             onChange={e => setPickupTime(e.target.value)}
                             disabled={loading}
@@ -107,14 +107,14 @@ const AdvancedFilterDesktop = ({
                     <div className="flex gap-2 w-full">
                         <input
                             type="date"
-                            className="bg-gray-50 border rounded py-2 px-2 w-[115px] text-center"
+                            className="bg-gray-50 border rounded py-2 px-2 w-[115px] text-center text-[14px]"
                             value={returnDate}
                             onChange={e => setReturnDate(e.target.value)}
                             disabled={loading}
                         />
                         <input
                             type="time"
-                            className="bg-gray-50 border rounded py-2 px-2 w-[90px] text-center"
+                            className="bg-gray-50 border rounded py-2 px-2 text-center"
                             value={returnTime}
                             onChange={e => setReturnTime(e.target.value)}
                             disabled={loading}

@@ -1,6 +1,6 @@
 export default function CategorySelector({ options, selected, onToggle, disabled }) {
     return (
-        <div className="flex flex-nowrap gap-3 justify-center w-full mb-6 mt-4">
+        <div className="flex flex-nowrap gap-3 justify-start w-full mb-6 mt-4">
             {options.map(({ label, icon }) => (
                 <button
                     key={label}
