@@ -1,18 +1,71 @@
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from 'axios';
 import API_BASE_URL from '../config';
 
 const Items = () => {
+  const locationHook = useLocation();
+  const query = new URLSearchParams(locationHook.search);
+
+  const locationFilter = query.get("location") || "";
+
+  const categoriesFilterRaw = query.get("categories") || "";
+  const categoriesFilter = categoriesFilterRaw
+    ? categoriesFilterRaw.split(",").map(c => c.trim())
+    : [];
+  const pickupDate = query.get("pickupDate");
+  const returnDate = query.get("returnDate");
+
+
+  const filtrosSelecionados =
+    (categoriesFilter && categoriesFilter.length > 0) &&
+    pickupDate && returnDate;
+
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!filtrosSelecionados) return;
+
+    setLoading(true);
     axios.get(`${API_BASE_URL}/api/items`)
-      .then(response => setItems(response.data))
-      .catch(error => console.error('Error fetching items:', error))
+      .then(response => {
+        let filtered = response.data;
+
+        filtered = filtered.filter(item => item.isAvailable && item.location);
+
+        if (locationFilter) {
+          filtered = filtered.filter(item =>
+            item.location.toLowerCase() === locationFilter.toLowerCase()
+          );
+        }
+
+        if (categoriesFilter.length > 0) {
+          filtered = filtered.filter(item =>
+            categoriesFilter.some(cat => item.category.toLowerCase() === cat.toLowerCase())
+          );
+        }
+
+        setItems(filtered);
+      })
+      .catch(() => setItems([]))
       .finally(() => setLoading(false));
-  }, []);
+  
+  }, [
+    locationFilter,
+    categoriesFilterRaw,
+    pickupDate,
+    returnDate,
+    filtrosSelecionados,
+  ]);
+
+  if (!filtrosSelecionados) {
+    return (
+      <div className="flex flex-col items-center justify-center h-60 text-gray-400 text-lg">
+        <span>Please select category, pickup and return dates to see available items.</span>
+      </div>
+    );
+  }
 
   if (loading) {
     return <div className="flex justify-center items-center h-48 text-blue-600 font-bold text-xl">Loading items...</div>

@@ -10,9 +10,9 @@ function getDateString(offsetDays = 0) {
 }
 
 const categoryOptions = [
-    { label: "Bikes", icon: <Bike size={20} /> },
-    { label: "Cars", icon: <Car size={20} /> },
-    { label: "RVs", icon: <Caravan size={20} /> },
+    { label: "Bike", icon: <Bike size={20} /> },
+    { label: "Car", icon: <Car size={20} /> },
+    { label: "RV", icon: <Caravan size={20} /> },
     { label: "Tools", icon: <Wrench size={20} /> },
 ];
 

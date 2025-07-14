@@ -1,7 +1,12 @@
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import CategorySelector from './CategorySelector';
 import LocationInput from './LocationInput';
 import { PlusCircle, ArrowLeft } from "lucide-react";
+
 
 const MobileStepOne = ({
     categoryOptions,
@@ -140,7 +145,27 @@ const AdvancedFilterMobile = (props) => {
     const [showMobileModal, setShowMobileModal] = useState(false);
     const [mobileStep, setMobileStep] = useState(1);
 
-    // Repassa todas as props para steps
+    const [user] = useAuthState(auth);
+    const navigate = useNavigate();
+
+    const handleShowItems = () => {
+        const { location, selectedCategories, pickupDate, returnDate } = props;
+        const params = new URLSearchParams();
+        if (location) params.append("location", location);
+        if (selectedCategories.length > 0) params.append("categories", selectedCategories.join(","));
+        if (pickupDate) params.append("pickupDate", pickupDate);
+        if (returnDate) params.append("returnDate", returnDate);
+
+        setShowMobileModal(false);
+        setMobileStep(1);
+
+        if (user) {
+            navigate(`/items?${params.toString()}`);
+        } else {
+            navigate(`/login?redirect=/items?${params.toString()}`);
+        }
+    };
+
     return (
         <>
             {!showMobileModal && mobileStep === 1 && (
@@ -154,7 +179,7 @@ const AdvancedFilterMobile = (props) => {
                 <MobileStepTwo
                     {...props}
                     onClose={() => { setShowMobileModal(false); setMobileStep(1); }}
-                    onShow={props.handleSubmit}
+                    onShow={handleShowItems}
                 />
             )}
         </>
