@@ -93,7 +93,7 @@ const Items = () => {
           {items.map(item => (
             <Link
               key={item.id}
-              to={`/items/${item.id}`}
+              to={`/items/${item.id}?pickupDate=${pickupDate}&returnDate=${returnDate}`}
               className="group border rounded-2xl shadow bg-white overflow-hidden block focus:outline-none focus:ring-2 focus:ring-blue-400
                 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
               tabIndex={0}
@@ -127,7 +127,7 @@ const Items = () => {
                       : "bg-gray-300 text-gray-400 cursor-not-allowed"}
                   `}
                   tabIndex={-1}
-                  disabled
+                  disabled={!item.isAvailable}
                 >
                   Rent Now
                 </button>

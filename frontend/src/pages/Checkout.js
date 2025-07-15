@@ -1,71 +1,52 @@
-import { useState } from 'react';
-import axios from 'axios';
-import API_BASE_URL from '../config';
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import API_BASE_URL from "../config";
 
 const Checkout = () => {
-  const [name, setName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvc, setCvc] = useState('');
+  const query = new URLSearchParams(useLocation().search);
+  const itemId = query.get("itemId");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${API_BASE_URL}/api/payment`, { name, cardNumber, expiry, cvc })
-      .then((res) => alert('Payment successful!'))
-      .catch((err) => alert('Error processing payment.'));
-  };
+  const [item, setItem] = useState(null);
+
+  useEffect(() => {
+    if (itemId) {
+      axios.get(`${API_BASE_URL}/api/items/${itemId}`)
+        .then(res => setItem(res.data))
+        .catch(() => setItem(null));
+    }
+  }, [itemId]);
+
+  if (!item) return <div className="p-8 text-center">Loading reservation...</div>;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-blue-50 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">Checkout</h2>
-
-        <input
-          type="text"
-          required
-          placeholder="Name on card"
-          className="w-full p-3 border rounded mb-4"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+    <div className="max-w-2xl mx-auto bg-white rounded-xl p-6 shadow my-10">
+      <h2 className="text-2xl font-bold mb-4 text-blue-700">Complete Your Reservation</h2>
+      <div className="flex flex-col sm:flex-row gap-6 items-center mb-6">
+        <img
+          src={item.image || "/images/placeholder.png"}
+          alt={item.name}
+          className="w-36 h-36 object-cover rounded-lg shadow"
         />
-
-        <input
-          type="text"
-          required
-          placeholder="Card number"
-          className="w-full p-3 border rounded mb-4"
-          value={cardNumber}
-          onChange={(e) => setCardNumber(e.target.value)}
-        />
-
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            required
-            placeholder="MM/YY"
-            className="w-1/2 p-3 border rounded"
-            value={expiry}
-            onChange={(e) => setExpiry(e.target.value)}
-          />
-          <input
-            type="text"
-            required
-            placeholder="CVC"
-            className="w-1/2 p-3 border rounded"
-            value={cvc}
-            onChange={(e) => setCvc(e.target.value)}
-          />
+        <div className="flex-1 text-left">
+          <div className="text-xl font-semibold">{item.name}</div>
+          <div className="text-gray-600">{item.location}</div>
+          <div className="text-blue-600 font-bold text-lg">${item.price}/day</div>
         </div>
+      </div>
 
+      {/* Aqui pode adicionar os inputs de datas, horários, informações de contato/pagamento etc */}
+      <form className="flex flex-col gap-4">
+        <input type="date" className="border rounded px-3 py-2" required placeholder="Pick-up date" />
+        <input type="date" className="border rounded px-3 py-2" required placeholder="Return date" />
+        <input type="text" className="border rounded px-3 py-2" required placeholder="Full Name" />
+        <input type="email" className="border rounded px-3 py-2" required placeholder="Email" />
+        {/* ...mais campos conforme precisar */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition"
+          className="mt-4 w-full bg-blue-600 text-white py-3 rounded-full font-bold hover:bg-blue-700 transition"
         >
-          Confirm Payment
+          Confirm Reservation
         </button>
       </form>
     </div>
