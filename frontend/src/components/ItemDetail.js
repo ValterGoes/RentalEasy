@@ -120,9 +120,9 @@ const ItemDetail = () => {
           onClose={() => setShowModal(false)}
           onConfirm={(data) => {
             setShowModal(false);
-            // Aqui você enviaria para o backend
+
             alert(`Reserva feita de ${data.pickupDate} até ${data.returnDate}\nNome: ${data.name}\nTotal: $${data.totalPrice}`);
-            navigate("/"); // Redireciona após reserva (ou pode exibir confirmação)
+            navigate("/");
           }}
         />
       )}
