@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { FaUserCircle, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import Language from './Language';
 import Profile from './Profile';
@@ -22,7 +22,7 @@ const Navbar = () => {
             aria-label="Menu"
             aria-expanded={isOpen}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
           <Link to="/" className="text-6xlxl md:text-2xl font-bold text-gray-800 hover:text-gray-900 transition duration-300">
             RentalEasy
@@ -52,7 +52,7 @@ const Navbar = () => {
               className="cursor-pointer text-gray-600 hover:text-gray-800"
               aria-label="Close Menu"
             >
-              <X size={24} />
+              <FaSignOutAlt size={24} />
             </button>
           </div>
           <div className="flex flex-col space-y-4 px-6 mt-6 text-gray-800 font-bold text-lg">

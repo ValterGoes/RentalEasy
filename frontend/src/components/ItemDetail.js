@@ -2,7 +2,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
-import { ArrowLeft } from "lucide-react";
+import { FaArrowLeft } from "react-icons/fa";
+
 
 // --- COMPONENTE DE DETALHES DO ITEM ---
 const ItemDetail = () => {
@@ -53,7 +54,7 @@ const ItemDetail = () => {
         className="flex items-center mb-4 text-blue-600 hover:text-blue-800 font-semibold transition"
         onClick={() => navigate(-1)}
       >
-        <ArrowLeft className="mr-2" /> Back
+        <FaArrowLeft className="mr-2" /> Back
       </button>
 
       <div className="flex flex-col md:flex-row gap-10">
@@ -118,11 +119,10 @@ const ItemDetail = () => {
           pickupDateDefault={pickupDateFromQuery}
           returnDateDefault={returnDateFromQuery}
           onClose={() => setShowModal(false)}
-          onConfirm={(data) => {
+          onConfirm={({ pickupDate, returnDate, name, email, totalDays, totalPrice }) => {
             setShowModal(false);
-
-            alert(`Reserva feita de ${data.pickupDate} até ${data.returnDate}\nNome: ${data.name}\nTotal: $${data.totalPrice}`);
-            navigate("/");
+            // Redireciona para checkout com todos os parâmetros
+            navigate(`/checkout?itemId=${item.id}&pickupDate=${pickupDate}&returnDate=${returnDate}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&total=${totalPrice}`);
           }}
         />
       )}
@@ -216,6 +216,7 @@ function ReserveModal({ item, pickupDateDefault, returnDateDefault, onClose, onC
               alert("Please select valid pickup and return dates.");
               return;
             }
+
             onConfirm({ pickupDate, returnDate, name, email, totalDays, totalPrice });
           }}
         >

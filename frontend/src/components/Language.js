@@ -1,7 +1,7 @@
 // src/components/Language.js
 import { useState, useRef, useEffect } from "react";
-import { Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { LuGlobe } from "react-icons/lu";
 
 const languages = [
     { code: 'en', label: 'EN', full: 'English' },
@@ -38,7 +38,7 @@ const Language = () => {
                 type="button"
                 aria-label="Select language"
             >
-                <Globe size={24} />
+                <LuGlobe size={24} />
                 <span className="ml-1 text-base font-normal">
                     {languages.find((l) => l.code === i18n.language)?.label || "EN"}
                 </span>

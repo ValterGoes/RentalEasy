@@ -1,10 +1,10 @@
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase"; // ou onde está sua instância
+import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 import CategorySelector from './CategorySelector';
 import LocationInput from './LocationInput';
-import { PlusCircle, ArrowLeft } from "lucide-react";
+import { FaPlusCircle, FaArrowLeft } from "react-icons/fa";
 
 
 const AdvancedFilterDesktop = ({
@@ -77,7 +77,7 @@ const AdvancedFilterDesktop = ({
                                     disabled={loading}
                                     style={{ height: 48 }}
                                 >
-                                    <PlusCircle size={18} className="mr-1" />
+                                    <FaPlusCircle size={18} className="mr-1" />
                                     Different return location
                                 </button>
                             </>
@@ -101,7 +101,7 @@ const AdvancedFilterDesktop = ({
                                     style={{ height: 48 }}
                                     aria-label="Back"
                                 >
-                                    <ArrowLeft size={20} />
+                                    <FaArrowLeft size={20} />
                                 </button>
                             </>
                         )}

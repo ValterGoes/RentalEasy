@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CategorySelector from './CategorySelector';
 import LocationInput from './LocationInput';
-import { PlusCircle, ArrowLeft } from "lucide-react";
+import { FaPlusCircle, FaArrowLeft } from "react-icons/fa";
 
 
 const MobileStepOne = ({
@@ -69,7 +69,7 @@ const MobileStepTwo = ({
                     onClick={() => setDiffReturn(true)}
                     disabled={loading}
                 >
-                    <PlusCircle size={18} className="mr-1" />
+                    <FaPlusCircle size={18} className="mr-1" />
                     Different return location
                 </button>
             ) : (
@@ -89,7 +89,7 @@ const MobileStepTwo = ({
                         disabled={loading}
                         aria-label="Back"
                     >
-                        <ArrowLeft size={20} />
+                        <FaArrowLeft size={20} />
                     </button>
                 </div>
             )}

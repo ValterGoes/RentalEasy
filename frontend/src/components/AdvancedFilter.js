@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Bike, Car, Caravan, Wrench } from "lucide-react";
+import { LuCaravan, LuCar, LuBike } from "react-icons/lu";
+import { FaTools } from "react-icons/fa";
+import { LiaToolsSolid } from "react-icons/lia";
 import AdvancedFilterDesktop from "./AdvancedFilterDesktop";
 import AdvancedFilterMobile from "./AdvancedFilterMobile";
 
@@ -10,10 +12,10 @@ function getDateString(offsetDays = 0) {
 }
 
 const categoryOptions = [
-    { label: "Bike", icon: <Bike size={20} /> },
-    { label: "Car", icon: <Car size={20} /> },
-    { label: "RV", icon: <Caravan size={20} /> },
-    { label: "Tools", icon: <Wrench size={20} /> },
+    { label: "Bike", icon: <LuBike size={20} /> },
+    { label: "Car", icon: <LuCar size={20} /> },
+    { label: "RV", icon: <LuCaravan size={20} /> },
+    { label: "Tools", icon: <LiaToolsSolid size={20} /> },
 ];
 
 const AdvancedFilter = ({ onSearch, availableLocations }) => {

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserCircle, ChevronDown, LogOut } from 'lucide-react';
+import { FaUserCircle, FaSignOutAlt, FaRegUserCircle, FaChevronDown } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -71,7 +71,7 @@ const Profile = ({ mobile, closeMobileMenu }) => {
                 onMouseDown={handleLogout}
                 className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-red-50 font-semibold border-t"
             >
-                <LogOut size={20} className="mr-2" />
+                <FaSignOutAlt size={20} className="mr-2" />
                 {t('Log out')}
             </button>
         </div>
@@ -83,13 +83,13 @@ const Profile = ({ mobile, closeMobileMenu }) => {
                 className="flex items-center cursor-pointer text-gray-800 hover:text-blue-700 focus:outline-none"
                 onClick={handleProfileClick}
             >
-                <UserCircle size={24} />
+                <FaRegUserCircle size={24} />
                 <span className="ml-1 text-base font-normal">
                     {user
                         ? (user.displayName ? user.displayName : t("My Account"))
                         : t("Log in | Register")}
                 </span>
-                {user && <ChevronDown size={20} className="ml-2" />}
+                {user && <FaChevronDown size={20} className="ml-2" />}
             </button>
             {user && profileMenuOpen && renderProfileMenu()}
         </div>

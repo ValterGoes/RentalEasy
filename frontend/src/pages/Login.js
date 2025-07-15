@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { FaTimes } from 'react-icons/fa';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 
@@ -37,7 +37,7 @@ const Login = () => {
     return (
         <div className="flex flex-col justify-between min-h-screen bg-gray-100 px-4 py-6">
             <button onClick={() => navigate('/')} className="self-end mb-2 text-gray-500 hover:text-gray-800">
-                <X size={24} />
+                <FaTimes size={24} />
             </button>
             <header className="text-center mb-4 mt-10">
                 <h1 className="text-3xl font-bold text-blue-600">Log in or Register</h1>

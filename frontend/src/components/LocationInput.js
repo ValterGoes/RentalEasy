@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MapPin } from "lucide-react";
+import { FaMapPin } from "react-icons/fa";
 
 export default function LocationInput({
     label,
@@ -37,7 +37,7 @@ export default function LocationInput({
         <div className="flex flex-col min-w-[220px] w-full relative">
             {label && <label className="text-xs font-semibold mb-1 text-left block">{label}</label>}
             <div className="flex items-center border rounded-xl px-2 bg-gray-50 h-12 flex-1 focus-within:ring-2 focus-within:ring-blue-600">
-                <MapPin className="text-gray-400 mr-2" size={18} />
+                <FaMapPin className="text-gray-400 mr-2" size={18} />
                 <input
                     type="text"
                     placeholder={placeholder}
