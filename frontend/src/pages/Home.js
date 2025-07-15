@@ -28,14 +28,20 @@ const Home = () => {
 
   return (
     <div
-      className="bg-contain bg-slate-200 bg-top bg-no-repeat min-h-screen flex flex-col items-center justify-start text-center px-6 pt-10 relative"
+      className="bg-contain bg-slate-100 bg-top bg-no-repeat min-h-screen flex flex-col items-center justify-start text-center px-6 pt-10 gap-7 relative"
     >
       <AdvancedFilter onSearch={handleSearch} availableLocations={availableLocations} />
 
       {/* Conteúdo principal da Home */}
-      <div className="mt-12 mb-6 h-[600px] flex flex-col items-center justify-center">
-        <h1 className="text-6xl font-bold text-blue-700 mb-4">Welcome to RentalEasy</h1>
-        <p className="text-lg text-gray-700">Rent bikes, tools, RVs, and more — quickly and effortlessly.</p>
+      <div className="w-full h-[650px] mt-80 flex items-center justify-center absolute inset-0"
+        style={{ backgroundImage: 'url(/images/Backgrounds/RentalEasy3.png)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.22}}
+      ></div>
+
+      <div 
+        className="my-16 h-[650px] w-full flex flex-col items-center justify-center z-50 relative"  
+      >
+        <h1 className="text-6xl text-cyan-900 mb-4"> Welcome to <strong>RentalEasy</strong> </h1>
+        <p className="text-lg font-medium text-gray-800">Rent bikes, tools, RVs, and more — quickly and effortlessly.</p>
       </div>
 
       <div className='mb-52'>
@@ -74,8 +80,8 @@ const Home = () => {
             </div>
           ))}
         </div>
-      </div>
-      
+      </div>  
+
     </div>
   );
 };

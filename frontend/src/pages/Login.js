@@ -45,7 +45,7 @@ const Login = () => {
             </header>
             <div className="flex-grow flex items-center justify-center">
                 <form className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-lg" onSubmit={handleLogin}>
-                    <h2 className="text-xl md:text-2xl font-bold text-center mb-4 md:mb-6 text-blue-600">Login</h2>
+                    <h2 className="text-2xl md:text-4xl font-bold  text-center mb-4 md:mb-6 text-blue-600">Login</h2>
                     {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                     <input
                         type="email"
@@ -83,9 +83,9 @@ const Login = () => {
                 </form>
             </div>
             <footer className="text-center text-xs md:text-sm text-gray-400">
-                <Link to="/terms" className="mx-2 hover:text-gray-600">Terms & Conditions</Link>
+                <Link to="#" className="mx-2 hover:text-gray-600">Terms & Conditions</Link>
                 |
-                <Link to="/privacy" className="mx-2 hover:text-gray-600">Privacy Policy</Link>
+                <Link to="#" className="mx-2 hover:text-gray-600">Privacy Policy</Link>
             </footer>
         </div>
     );
