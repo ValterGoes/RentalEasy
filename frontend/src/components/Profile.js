@@ -47,7 +47,6 @@ const Profile = ({ mobile, closeMobileMenu }) => {
             if (mobile && closeMobileMenu) closeMobileMenu();
             navigate('/');
         } catch (err) {
-            // Opcional: trate o erro ou mostre alerta para o usuário
             console.error("Erro ao deslogar:", err);
         }
     };

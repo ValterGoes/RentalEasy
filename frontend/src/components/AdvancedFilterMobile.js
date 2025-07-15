@@ -15,7 +15,7 @@ const MobileStepOne = ({
     loading,
     onNext
 }) => (
-    <div className="bg-white shadow-lg rounded-xl px-6 py-4 max-w-md w-full mx-auto mb-4">
+    <div className="bg-white shadow-lg rounded-xl px-6 py-6 max-w-md w-full mx-auto">
         <CategorySelector
             options={categoryOptions}
             selected={selectedCategories}

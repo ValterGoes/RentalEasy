@@ -40,7 +40,10 @@ const Navbar = () => {
           className={`fixed md:hidden top-0 left-0 h-full w-64 bg-white shadow z-50 transition-transform duration-300 ease-in-out
             ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
-          <div className="flex items-center justify-between p-4 border-b">
+          <div 
+            className="flex items-center justify-between p-4 border-b" 
+            onClick={() => setIsOpen(false)}
+          >
             <Link to="/" className="text-2xl font-bold text-blue-600">
               RentalEasy
             </Link>
@@ -60,7 +63,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Overlay para fechar menu mobile */}
       {isOpen && (
         <div
