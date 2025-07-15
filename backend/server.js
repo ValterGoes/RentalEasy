@@ -15,12 +15,12 @@ const items = [
     name: "Electric Bike",
     price: 25,
     images: [
-      "/images/electric-bike/electric-bike-01.jpg",
-      "/images/electric-bike/electric-bike-02.jpg",
-      "/images/electric-bike/electric-bike-03.jpg",
-      "/images/electric-bike/electric-bike-04.jpg",
-      "/images/electric-bike/electric-bike-05.jpg",
-      "/images/electric-bike/electric-bike-06.jpg"
+      "/images/Electric-bike/electric-bike-01.jpg",
+      "/images/Electric-bike/electric-bike-02.jpg",
+      "/images/Electric-bike/electric-bike-03.jpg",
+      "/images/Electric-bike/electric-bike-04.jpg",
+      "/images/Electric-bike/electric-bike-05.jpg",
+      "/images/Electric-bike/electric-bike-06.jpg"
     ],
     image: "/images/electric-bike/electric-bike-01.jpg", 
     category: "Bike",
@@ -77,7 +77,7 @@ const items = [
     image: "/images/scooter.jpg",
     category: "Bike",
     location: "San José, CA",
-    isAvailable: false,
+    isAvailable: true,
     description: "Lightweight scooter, easy to handle.",
     features: ["Fast charging", "Helmet included"]
   },
@@ -97,17 +97,24 @@ const items = [
   },
   {
     id: 6,
-    name: "Hammer Drill",
+    name: "Off-Roads Machines",
     price: 15,
     images: [
+      "/images/Excavator/excavator-01.jpg",
+      "/images/Excavator/excavator-02.jpg",
+      "/images/Excavator/excavator-03.jpg",
+      "/images/Excavator/excavator-04.jpg",
+      "/images/Excavator/excavator-05.jpg",
+      "/images/Excavator/excavator-06.jpg",
+      "/images/Excavator/excavator-07.jpg"
 
     ],
-    image: "/images/hammer-drill.jpg",
+    image: "/images/Excavator/excavator-01.jpg",
     category: "Tools",
     location: "San José, CA",
-    isAvailable: false,
-    description: "Hammer drill for heavy duty tasks.",
-    features: ["Case included", "3 drill bits"]
+    isAvailable: true,
+    description: "Heavy-duty excavator for construction work.",
+    features: ["Powerful engine", "Operator manual included", "Safety gear"]
   }
 ];
 
