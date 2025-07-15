@@ -72,9 +72,10 @@ const items = [
     name: "Electric Scooter",
     price: 20,
     images: [
-
+      "/images/Electric-Scooter/Electric-Scooter.jpg",
+      "/images/Electric-Scooter/Electric-Scooter-01.jpg",
     ],
-    image: "/images/scooter.jpg",
+    image: "/images/Electric-Scooter/Electric-scooter.jpg",
     category: "Bike",
     location: "San José, CA",
     isAvailable: true,
