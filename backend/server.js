@@ -77,7 +77,7 @@ const items = [
     ],
     image: "/images/Electric-Scooter/Electric-scooter.jpg",
     category: "Bike",
-    location: "San José, CA",
+    location: "Los Altos, CA",
     isAvailable: true,
     description: "Lightweight scooter, easy to handle.",
     features: ["Fast charging", "Helmet included"]
