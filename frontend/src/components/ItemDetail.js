@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
 import { FaArrowLeft } from "react-icons/fa";
+import ReserveModal from "./ReserveModal";
 
-
-// --- COMPONENTE DE DETALHES DO ITEM ---
 const ItemDetail = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -49,7 +48,6 @@ const ItemDetail = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-8">
-      {/* Botão Voltar */}
       <button
         className="flex items-center mb-4 text-blue-600 hover:text-blue-800 font-semibold transition"
         onClick={() => navigate(-1)}
@@ -58,7 +56,6 @@ const ItemDetail = () => {
       </button>
 
       <div className="flex flex-col md:flex-row gap-10">
-        {/* Galeria */}
         <div className="flex-1">
           <div className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden bg-gray-100 shadow mb-4">
             <img
@@ -81,7 +78,7 @@ const ItemDetail = () => {
             ))}
           </div>
         </div>
-        {/* Detalhes e Reserva */}
+
         <div className="flex-1 flex flex-col justify-between min-w-[270px]">
           <div>
             <h2 className="text-3xl font-bold text-blue-600 mb-2">{item.name}</h2>
@@ -112,119 +109,44 @@ const ItemDetail = () => {
         </div>
       </div>
 
-      {/* MODAL DE RESERVA */}
+      {/* Renderiza o modal de reserva */}
       {showModal && (
         <ReserveModal
           item={item}
           pickupDateDefault={pickupDateFromQuery}
           returnDateDefault={returnDateFromQuery}
           onClose={() => setShowModal(false)}
-          onConfirm={({ pickupDate, returnDate, name, email, totalDays, totalPrice }) => {
+          onConfirm={(reservationData) => {
             setShowModal(false);
-            // Redireciona para checkout com todos os parâmetros
-            navigate(`/checkout?itemId=${item.id}&pickupDate=${pickupDate}&returnDate=${returnDate}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&total=${totalPrice}`);
+
+            const params = new URLSearchParams({
+              itemId: item.id,
+              pickupDate: reservationData.pickupDate,
+              returnDate: reservationData.returnDate,
+              firstName: reservationData.firstName,
+              lastName: reservationData.lastName,
+              email: reservationData.email,
+              phone: reservationData.phone,
+              address: reservationData.address,
+              city: reservationData.city,
+              state: reservationData.state,
+              zip: reservationData.zip,
+              countryAddress: reservationData.countryAddress,
+              notify: reservationData.notify,
+              total: reservationData.totalPrice.toString(),
+              cardNumber: reservationData.cardNumber,
+              holderName: reservationData.holderName,
+              expiry: reservationData.expiry,
+              cvc: reservationData.cvc
+            });
+
+            navigate(`/checkout?${params.toString()}`);
+
           }}
         />
       )}
     </div>
   );
 };
-
-// --- COMPONENTE MODAL DE RESERVA ---
-function ReserveModal({ item, pickupDateDefault, returnDateDefault, onClose, onConfirm }) {
-  const [pickupDate, setPickupDate] = useState(pickupDateDefault || "");
-  const [returnDate, setReturnDate] = useState(returnDateDefault || "");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
-  // Calcula total de dias
-  function getDaysDiff(start, end) {
-    try {
-      const s = new Date(start);
-      const e = new Date(end);
-      if (isNaN(s) || isNaN(e)) return 0;
-      const ms = e.getTime() - s.getTime();
-      return ms > 0 ? Math.ceil(ms / (1000 * 60 * 60 * 24)) : 0;
-    } catch {
-      return 0;
-    }
-  }
-
-  const totalDays = getDaysDiff(pickupDate, returnDate);
-  const totalPrice = totalDays > 0 ? totalDays * item.price : item.price;
-
-  // Validação de datas
-  const datesValid = pickupDate && returnDate && (new Date(returnDate) > new Date(pickupDate));
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-xl relative z-10">
-        <button className="absolute top-4 right-4 text-xl" onClick={onClose}>&times;</button>
-        <h2 className="text-2xl font-bold text-blue-700 mb-4">Reserve: {item.name}</h2>
-        <img src={item.image || "/images/placeholder.png"} alt={item.name} className="w-full h-44 object-cover rounded-lg mb-4" />
-        <div className="mb-3 flex gap-2">
-          <input
-            type="date"
-            value={pickupDate}
-            onChange={e => setPickupDate(e.target.value)}
-            className="border rounded px-2 py-2 flex-1"
-            required
-          />
-          <input
-            type="date"
-            value={returnDate}
-            onChange={e => setReturnDate(e.target.value)}
-            className="border rounded px-2 py-2 flex-1"
-            required
-          />
-        </div>
-        <div className="mb-2 text-gray-600">
-          {datesValid ? (
-            <>
-              <span className="font-bold">{totalDays}</span> day{totalDays !== 1 ? "s" : ""} × ${item.price}/day
-              <br />
-              <span className="text-blue-600 font-bold text-lg">Total: ${totalPrice}</span>
-            </>
-          ) : (
-            <span className="text-xs text-red-500">Select valid dates</span>
-          )}
-        </div>
-        <input
-          type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className="border rounded px-2 py-2 mb-2 w-full"
-          placeholder="Full Name"
-          required
-        />
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="border rounded px-2 py-2 mb-2 w-full"
-          placeholder="Email"
-          required
-        />
-        <button
-          className="w-full bg-blue-600 text-white py-3 rounded-full font-bold hover:bg-blue-700 transition mt-2"
-          onClick={() => {
-            if (!pickupDate || !returnDate || !name || !email) {
-              alert("Please fill in all fields!");
-              return;
-            }
-            if (!datesValid) {
-              alert("Please select valid pickup and return dates.");
-              return;
-            }
-
-            onConfirm({ pickupDate, returnDate, name, email, totalDays, totalPrice });
-          }}
-        >
-          Confirm Reservation
-        </button>
-      </div>
-    </div>
-  );
-}
 
 export default ItemDetail;
