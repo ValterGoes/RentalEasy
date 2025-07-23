@@ -75,17 +75,6 @@ const Items = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Camada do background */}
-      <div
-        className="absolute inset-0 bg-slate-100"
-        // style={{
-        //   backgroundImage: 'url(/images/Backgrounds/RentalEasy2.png)',
-        //   backgroundSize: 'cover',
-        //   backgroundPosition: 'center',
-        //   opacity: 0.22,
-        //   zIndex: 0,
-        // }}
-      />
       {/* Conteúdo */}
       <div className="relative z-10 p-6">
         <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">Available for Rent</h2>
