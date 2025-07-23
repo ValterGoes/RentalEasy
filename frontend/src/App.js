@@ -1,19 +1,56 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { auth } from './firebase'; 
+import { onAuthStateChanged } from 'firebase/auth';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
+import HomeLogged from './pages/HomeLogged';
 import Items from './pages/Items';
 import ItemDetail from './components/ItemDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
+import SplashScreen from './pages/SplashScreen';
+import Home from './pages/Home';
+
+
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth(); 
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+
+function InitialSplashScreen() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          navigate("/homelogged", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
+      });
+      return () => unsubscribe(); 
+    }, 2000);
+
+    return () => clearTimeout(timer); // Limpa o timer
+  }, [navigate]);
+
+  return (
+    <SplashScreen />
+  );
+}
+
 
 function Layout() {
   const location = useLocation();
 
-  // Não exibir Navbar e Footer nas páginas de login e registro
-  const hideLayoutPaths = ['/login', '/register'];
-
+  const hideLayoutPaths = ['/login', '/register', '/'];
   const shouldShowLayout = !hideLayoutPaths.includes(location.pathname);
 
   return (
@@ -21,12 +58,20 @@ function Layout() {
       {shouldShowLayout && <Navbar />}
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+
+          <Route path="/" element={<InitialSplashScreen />} />
+
+          <Route path="/Home" element={<Home />} />
           <Route path="/items" element={<Items />} />
           <Route path="/items/:id" element={<ItemDetail />} />
-          <Route path="/checkout" element={<Checkout />} />
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+
+          <Route path="/homelogged" element={<PrivateRoute><HomeLogged /></PrivateRoute>} />
+          <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+
         </Routes>
       </main>
       {shouldShowLayout && <Footer />}
@@ -37,7 +82,9 @@ function Layout() {
 function App() {
   return (
     <Router>
-      <Layout />
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
     </Router>
   );
 }
