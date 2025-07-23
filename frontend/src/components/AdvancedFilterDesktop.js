@@ -41,7 +41,8 @@ const AdvancedFilterDesktop = ({
         if (user) {
             navigate(`/items?${params.toString()}`);
         } else {
-            navigate(`/login?redirect=/items?${params.toString()}`);
+            // navigate(`/login?redirect=/items?${params.toString()}`);
+            navigate(`/items?${params.toString()}`);
         }
     };
 
@@ -162,4 +163,3 @@ const AdvancedFilterDesktop = ({
 };
 
 export default AdvancedFilterDesktop;
-
