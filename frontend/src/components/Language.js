@@ -33,7 +33,7 @@ const Language = () => {
     return (
         <div className="relative" ref={langRef}>
             <button
-                className="flex items-center text-gray-800 hover:text-blue-600 focus:outline-none"
+                className="flex items-center text-gray-600 hover:text-gray-700 md:text-blue-600 md:hover:text-blue-700 focus:outline-none"
                 onClick={() => setLangMenuOpen((v) => !v)}
                 type="button"
                 aria-label="Select language"
