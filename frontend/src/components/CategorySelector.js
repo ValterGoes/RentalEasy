@@ -1,4 +1,4 @@
-export default function CategorySelector({ options, selected, onToggle, disabled }) {
+const CategorySelector = ({ options, selected, onToggle, disabled }) => {
     return (
         <div className="flex flex-nowrap gap-3 justify-start w-full mb-6">
             {options.map(({ label, icon }) => (
@@ -20,3 +20,5 @@ export default function CategorySelector({ options, selected, onToggle, disabled
         </div>
     );
 }
+
+export default CategorySelector;
