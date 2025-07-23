@@ -51,14 +51,14 @@ const Profile = ({ mobile, closeMobileMenu }) => {
         }
     };
       
-
+    
     const renderProfileMenu = () => (
         <div className="absolute right-0 mt-2 w-56 rounded shadow bg-white border z-[999]">
             {profileMenuItems.map(item => (
                 <Link
                     to={item.to}
                     key={item.key}
-                    className="block w-full text-left px-4 py-2 hover:bg-blue-50 text-gray-700"
+                    className="block w-full text-left px-4 py-2 hover:bg-blue-50 text-blue-600"
                     onClick={() => {
                         setProfileMenuOpen(false);
                         if (mobile && closeMobileMenu) closeMobileMenu();
@@ -69,7 +69,7 @@ const Profile = ({ mobile, closeMobileMenu }) => {
             ))}
             <button
                 onMouseDown={handleLogout}
-                className="flex items-center w-full px-4 py-2 text-left text-gray-800 hover:bg-red-50 font-semibold border-t"
+                className="flex items-center w-full px-4 py-2 text-left text-blue-600 hover:bg-red-50 font-semibold border-t"
             >
                 <FaSignOutAlt size={20} className="mr-2" />
                 {t('Log out')}
@@ -80,7 +80,7 @@ const Profile = ({ mobile, closeMobileMenu }) => {
     return (
         <div className="relative" ref={profileRef}>
             <button
-                className="flex items-center cursor-pointer text-gray-800 hover:text-blue-700 focus:outline-none"
+                className="flex items-center cursor-pointer text-gray-600 hover:text-gray-700 md:text-blue-600 md:hover:text-blue-700 focus:outline-none"
                 onClick={handleProfileClick}
             >
                 <FaRegUserCircle size={24} />
