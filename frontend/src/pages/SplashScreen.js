@@ -1,5 +1,4 @@
 
-
 function SplashScreen() {
 
     return (
@@ -7,8 +6,8 @@ function SplashScreen() {
             <img
                 src="images/Rental-Easy-logo.png"
                 alt="App Logo"
-                className="w-60 h-60 object-contain animate-ping"
-                style={{ animationDuration: '2.5s' }}
+                className="w-40 h-40 md:w-80 md:h-80 object-contain animate-logo-grow-fade"
+                style={{ animationDuration: '1s' }}
             />
         </div>
     );
