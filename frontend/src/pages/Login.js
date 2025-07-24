@@ -15,7 +15,7 @@ const Login = () => {
         setError('');
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                navigate('/');
+                navigate('/homelogged');
             })
             .catch(err => setError(err.message));
     };
@@ -23,14 +23,14 @@ const Login = () => {
     const handleGoogleLogin = () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
-            .then(() => navigate('/'))
+            .then(() => navigate('/homelogged'))
             .catch(err => setError(err.message));
     };
 
     const handleAppleLogin = () => {
         const provider = new OAuthProvider('apple.com');
         signInWithPopup(auth, provider)
-            .then(() => navigate('/'))
+            .then(() => navigate('/homelogged'))
             .catch(err => setError(err.message));
     };
 
