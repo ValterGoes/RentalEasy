@@ -32,16 +32,26 @@ const AdvancedFilterDesktop = ({
     const navigate = useNavigate();
 
     const handleShowItems = () => {
+        
+        let finalReturnLocation = returnLocation;
+        if (!diffReturn || !returnLocation) { 
+            finalReturnLocation = location;
+        }
+
         const params = new URLSearchParams();
-        if (location) params.append("location", location);
+        if (location) params.append("location", location); 
         if (selectedCategories.length > 0) params.append("categories", selectedCategories.join(","));
         if (pickupDate) params.append("pickupDate", pickupDate);
+        if (pickupTime) params.append("pickupTime", pickupTime);
         if (returnDate) params.append("returnDate", returnDate);
+        if (returnTime) params.append("returnTime", returnTime);
+        if (finalReturnLocation) params.append("returnLocation", finalReturnLocation); 
+
+        console.log("AdvancedFilterDesktop - Parâmetros enviados para /items:", params.toString());
 
         if (user) {
             navigate(`/items?${params.toString()}`);
         } else {
-            // navigate(`/login?redirect=/items?${params.toString()}`);
             navigate(`/items?${params.toString()}`);
         }
     };
@@ -55,8 +65,8 @@ const AdvancedFilterDesktop = ({
                 disabled={loading}
                 className="justify-start"
             />
-            {/* Remova onSubmit */}
-            <form>
+
+            <form onSubmit={(e) => e.preventDefault()}> 
                 <div className="flex flex-col md:flex-row gap-4 w-full items-end">
                     <div className="flex-[2] flex items-end gap-2">
                         {!diffReturn ? (
@@ -147,7 +157,7 @@ const AdvancedFilterDesktop = ({
                     </div>
                     <div>
                         <button
-                            type="button" 
+                            type="button"
                             className="h-12 px-10 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-800 transition disabled:opacity-60 mt-5 md:mt-7"
                             disabled={loading}
                             style={{ minWidth: 130 }}
