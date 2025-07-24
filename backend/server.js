@@ -131,6 +131,13 @@ app.get('/api/items/:id', (req, res) => {
   res.json(item);
 });
 
+// Endpoint para locations
+app.get('/api/locations', (req, res) => {
+  const uniqueLocations = [...new Set(items.map(item => item.location))];
+  res.json(uniqueLocations);
+});
+
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
