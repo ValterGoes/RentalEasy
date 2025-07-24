@@ -93,6 +93,8 @@ const Items = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-slate-200 text-gray-700 text-lg">
         <span>Please select category, pickup and return dates to see available items.</span>
+
+        <Link to="/home" className="mt-4 text-blue-600 hover:underline">Go back to home</Link>
       </div>
     );
   }
