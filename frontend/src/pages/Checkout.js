@@ -4,93 +4,152 @@ import axios from "axios";
 import API_BASE_URL from "../config";
 import { FaCreditCard, FaPaypal, FaEdit, FaSpinner } from "react-icons/fa";
 import { MdPix } from "react-icons/md";
-import { PaymentIcon } from 'react-svg-credit-card-payment-icons';
+import {
+  PaymentIcon, // Mantém a importação para exibir ícones, mas não para o formulário de input
+  detectCardType,
+  validateCardNumber,
+  formatCardNumber,
+} from "react-svg-credit-card-payment-icons";
+
+// CreditCardForm não é mais importado aqui, pois seus campos serão exibidos diretamente
+// import CreditCardForm from "../components/CreditCardForm"; 
 
 function getQS(query, key) {
   return query.get(key) || "";
 }
 
-const paymentOptions = [
-  { id: "card", label: "Credit Card", icon: <FaCreditCard size={20} /> },
-  { id: "pix", label: "PIX", icon: <MdPix size={20} /> },
-  { id: "paypal", label: "PayPal", icon: <FaPaypal size={20} /> }
-];
-
 const Checkout = () => {
   const query = new URLSearchParams(useLocation().search);
+
   const itemId = getQS(query, "itemId");
   const pickupDate = getQS(query, "pickupDate");
+  const pickupTime = getQS(query, "pickupTime");
   const returnDate = getQS(query, "returnDate");
+  const returnTime = getQS(query, "returnTime");
   const total = query.get("total");
 
-  const firstName = query.get("firstName");
-  const lastName = query.get("lastName");
-  const email = query.get("email");
-  const phone = query.get("phone");
-  const country = query.get("country");
-  const address = query.get("address") || "";
-  const city = query.get("city") || "";
-  const state = query.get("state") || "";
-  const zip = query.get("zip") || "";
-  const countryAddress = query.get("countryAddress") || "";
-  const notify = query.get("notify") || "yes";
-  const isAdult = query.get("isAdult") === "true";
+  const firstName = getQS(query, "firstName");
+  const lastName = getQS(query, "lastName");
+  const email = getQS(query, "email");
+  const phone = getQS(query, "phone");
+  const address = getQS(query, "address") || "";
+  const city = getQS(query, "city") || "";
+  const state = getQS(query, "state") || "";
+  const zip = getQS(query, "zip") || "";
+  const countryAddress = getQS(query, "countryAddress") || "";
+  const notify = getQS(query, "notify") || "yes";
+  const isAdult = getQS(query, "isAdult") === "true";
 
-  const [cardNumber, setCardNumber] = useState(query.get("cardNumber") || "");
-  const [holderName, setHolderName] = useState(query.get("holderName") || "");
-  const [expiry, setExpiry] = useState(query.get("expiry") || "");
-  const [cvc, setCvc] = useState(query.get("cvc") || "");
+  const pickupLocation = getQS(query, "pickupLocation");
+  const returnLocation = getQS(query, "returnLocation");
+
+  const cardNumber = getQS(query, "cardNumber") || "";
+  const holderName = getQS(query, "holderName") || "";
+  const expiry = getQS(query, "expiry") || "";
+  const cvc = getQS(query, "cvc") || "";
+  const paypalEmail = getQS(query, "paypalEmail") || "";
+  const paymentMethod = getQS(query, "paymentMethod") || "card"; // Extraindo paymentMethod da URL
 
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("card");
-  const pixKey = "pix-demo@rentaleasy.com";
-  const [paypalEmail, setPaypalEmail] = useState("");
+
+  const pixKey = "pix-demo@rentaleasy.com"; // Chave PIX simulada
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (itemId) {
-      axios.get(`${API_BASE_URL}/api/items/${itemId}`)
-        .then(res => setItem(res.data))
+      axios
+        .get(`${API_BASE_URL}/api/items/${itemId}`)
+        .then((res) => setItem(res.data))
         .catch(() => setItem(null));
     }
   }, [itemId]);
 
+  const cardType = detectCardType(cardNumber);
+  // isCardNumberValid não é estritamente necessário aqui, pois a validação já ocorreu no ReserveModal
+  // const isCardNumberValid = validateCardNumber(cardNumber); 
+
+  // A validação de pagamento agora é mais simples ou pode ser removida se toda a validação ocorrer no ReserveModal
   function validatePayment() {
-    if (paymentMethod === "card") {
-      if (!cardNumber || !holderName || !expiry || !cvc) return "Fill in all credit card fields.";
-      if (cardNumber.replace(/\s/g, "").length < 13) return "Card number seems invalid.";
-      if (!/^[0-9]{2}\/[0-9]{2,4}$/.test(expiry)) return "Expiry must be MM/YY.";
-      if (!/^[0-9]{3,4}$/.test(cvc)) return "CVC seems invalid.";
-    }
-    if (paymentMethod === "paypal") {
-      if (!paypalEmail || !/^[^@]+@[^@]+\.[^@]+$/.test(paypalEmail)) return "Please enter a valid PayPal email.";
-    }
-    // Pix: pode apenas confirmar!
+    // No Checkout, a validação principal já ocorreu no ReserveModal.
+    // Aqui, podemos adicionar validações finais ou simplesmente prosseguir.
+    // Por exemplo, você pode querer validar se todos os campos essenciais estão preenchidos,
+    // mas a validação de formato já foi feita.
     return null;
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const err = validatePayment();
+    const err = validatePayment(); // Validação simplificada
     if (err) {
-      alert(err);
+      const customAlert = document.createElement("div");
+      customAlert.className =
+        "fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50";
+      customAlert.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+              <p class="text-lg font-semibold mb-4">${err}</p>
+              <button id="close-custom-alert" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">OK</button>
+          </div>
+      `;
+      document.body.appendChild(customAlert);
+      document.getElementById("close-custom-alert").onclick = () => {
+        document.body.removeChild(customAlert);
+      };
       return;
     }
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setDone(true);
+      console.log("Pagamento confirmado com os seguintes dados:", {
+        itemId,
+        pickupDate,
+        pickupTime,
+        returnDate,
+        returnTime,
+        pickupLocation,
+        returnLocation,
+        total,
+        firstName,
+        lastName,
+        email,
+        phone,
+        address,
+        city,
+        state,
+        zip,
+        countryAddress,
+        notify,
+        isAdult,
+        cardNumber,
+        holderName,
+        expiry,
+        cvc,
+        paymentMethod,
+        paypalEmail,
+      });
     }, 1500);
   }
 
   if (done) {
     return (
       <div className="flex flex-col items-center justify-center h-[70vh]">
-        <div className="text-3xl text-green-600 font-bold mb-3">Payment Successful!</div>
-        <div className="text-lg text-gray-700">Your reservation is confirmed.<br />Check your email for details.</div>
-        <button className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-full font-bold" onClick={() => navigate("/")}>Back to Home</button>
+        <div className="text-3xl text-green-600 font-bold mb-3">
+          Payment Successful!
+        </div>
+        <div className="text-lg text-gray-700">
+          Your reservation is confirmed.
+          <br />
+          Check your email for details.
+        </div>
+        <button
+          className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-full font-bold"
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </button>
       </div>
     );
   }
@@ -101,12 +160,16 @@ const Checkout = () => {
 
   function handleEdit() {
     const params = new URLSearchParams({
+      itemId,
       pickupDate,
+      pickupTime,
       returnDate,
+      returnTime,
+      pickupLocation,
+      returnLocation,
       firstName,
       lastName,
       email,
-      country,
       phone,
       address,
       city,
@@ -114,190 +177,126 @@ const Checkout = () => {
       zip,
       countryAddress,
       notify,
-      isAdult,
+      isAdult: String(isAdult),
       total,
+      cardNumber,
+      holderName,
+      expiry,
+      cvc,
+      paypalEmail,
+      paymentMethod, // Incluindo paymentMethod para a edição
     });
+    params.append('editMode', 'true');
     navigate(`/items/${itemId}?${params.toString()}`);
   }
 
-  // Montagem amigável do endereço
+  // Incluindo countryAddress na exibição do endereço
   const addressDisplay = [address, city, state, zip, countryAddress].filter(Boolean).join(", ");
 
   return (
-    <div className="max-w-2xl mx-auto bg-slate-50 rounded-xl p-6 shadow my-10">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Checkout</h2>
-      <div className="flex flex-col sm:flex-row gap-6 items-center mb-6">
+    <div className="max-w-2xl mx-auto bg-slate-50 rounded-xl p-6 shadow my-10 font-sans">
+      <h2 className="text-3xl font-bold mb-6 text-blue-700 text-center">Checkout</h2>
+      <div className="flex flex-col sm:flex-row gap-6 items-center mb-6 border-b pb-6 border-gray-200">
         <img
           src={item.image || "/images/placeholder.png"}
           alt={item.name}
-          className="w-36 h-36 object-cover rounded-lg shadow"
+          className="w-36 h-36 object-cover rounded-lg shadow-md"
         />
         <div className="flex-1 text-left">
-          <div className="text-xl font-semibold">{item.name}</div>
-          <div className="text-gray-600">{item.location}</div>
-          <div className="text-gray-500 text-sm mb-2">
-            {pickupDate} → {returnDate}
+          <div className="text-2xl font-semibold text-gray-800">{item.name}</div>
+          <div className="text-gray-600 text-lg">
+            {pickupLocation} {returnLocation && pickupLocation !== returnLocation ? ` → ${returnLocation}` : ''}
           </div>
-          <div className="text-blue-600 font-bold text-lg">Total: ${total}</div>
+          <div className="text-gray-500 text-base mb-2">
+            {pickupDate} {pickupTime} &rarr; {returnDate} {returnTime}
+          </div>
+          <div className="text-blue-600 font-bold text-xl">Total: ${total}</div>
         </div>
       </div>
 
-      {/* RESUMO DOS DADOS DO CONDUTOR */}
-      <div className="mb-6 bg-blue-50 p-4 rounded-xl border border-blue-100 text-blue-900">
-        <div className="flex justify-between items-center mb-2">
-          <span className="font-bold text-lg">Reservation details</span>
+      <div className="mb-8 bg-blue-50 p-5 rounded-xl border border-blue-100 text-blue-900 shadow-sm">
+        <div className="flex justify-between items-center mb-3">
+          <span className="font-bold text-xl">Reservation Details</span>
           <button
-            className="flex items-center gap-1 text-blue-700 hover:text-blue-900 font-semibold text-sm"
+            className="flex items-center gap-1 text-blue-700 hover:text-blue-900 font-semibold text-sm transition duration-200"
             type="button"
             onClick={handleEdit}
           >
             <FaEdit className="inline" /> Edit Reservation
           </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
           <div><b>Name:</b> {firstName} {lastName}</div>
           <div><b>Email:</b> {email}</div>
-          <div><b>Country:</b> {country}</div>
+          <div><b>Country:</b> {countryAddress}</div>
           <div><b>Phone:</b> {phone}</div>
           <div><b>Address:</b> {addressDisplay || "-"}</div>
           <div><b>Info by email?</b> {notify === "yes" ? "Yes" : "No"}</div>
-          <div><b>18+?</b> {isAdult === "true" ? "Yes" : "No"}</div>
+          <div><b>18+?</b> {isAdult ? "Yes" : "No"}</div>
         </div>
+
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          {/* Seção de detalhes do método de pagamento */}
+          <div className="mt-3 p-4 bg-gray-50 rounded-lg border gap-4 flex flex-col">
+            <div className="font-bold text-blue-600 mb-2 text-lg">Payment Method</div>
+
+            <p>
+              AJUSTAR a exibição do método de pagamento selecionado, incluindo ícones e detalhes específicos.
+
+
+            </p>
+
+
+
+            <div className="text-gray-700 text-lg font-semibold capitalize mb-2 flex items-center">
+              {paymentMethod === "card" && <FaCreditCard className="inline mr-2" />}
+              {paymentMethod === "pix" && <MdPix className="inline mr-2" />}
+              {paymentMethod === "paypal" && <FaPaypal className="inline mr-2" />}
+              {paymentMethod === "card" ? "Credit Card" : paymentMethod} {/* Exibe "Credit Card" ou o nome do método */}
+            </div>
+
+            {/* Detalhes do pagamento em formato de grade */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
+              {paymentMethod === "card" && (
+                <>
+                  <div><b>Card Number:</b> <span className="font-mono">{formatCardNumber(cardNumber)}</span></div>
+                  <div><b>Holder Name:</b> {holderName}</div>
+                  <div><b>Expiry:</b> {expiry}</div>
+                  <div><b>CVC:</b> {cvc}</div>
+                </>
+              )}
+              {paymentMethod === "pix" && (
+                <div><b>PIX Key:</b> <span className="font-mono bg-blue-100 px-2 py-1 rounded text-blue-800 select-all">{pixKey}</span></div>
+              )}
+              {paymentMethod === "paypal" && (
+                <div><b>PayPal Email:</b> {paypalEmail}</div>
+              )}
+            </div>
+
+            <div className="text-sm text-yellow-800 mt-3 bg-yellow-100 p-3 rounded-lg border border-yellow-200">
+              The payment method must be under the renter's name and
+              physically presented at pickup. Debit cards are accepted for
+              select vehicle classes, and{" "}
+              <span className="underline font-medium">
+                additional documentation
+              </span>{" "}
+              may be required in some cases.
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="flex mt-4 w-full justify-center items-center bg-blue-600 text-white py-3 rounded-full font-bold hover:bg-blue-700 transition"
+            disabled={loading}
+          >
+            {loading ? (
+              <FaSpinner className="animate-spin mr-2" />
+            ) : (
+              "Confirm Payment"
+            )}
+          </button>
+        </form>
       </div>
-
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div>
-          <div className="font-semibold mb-2">Payment method</div>
-          <div className="flex gap-3">
-            {paymentOptions.map(opt => (
-              <button
-                key={opt.id}
-                type="button"
-                className={`flex items-center gap-2 border rounded-md px-4 py-2 text-base text-nowrap font-medium transition
-                  ${paymentMethod === opt.id ? "bg-blue-600 text-white border-blue-600 shadow" : "text-gray-800"}`}
-                onClick={() => setPaymentMethod(opt.id)}
-              >
-                {opt.icon}
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Condicional */}
-        {paymentMethod === "card" && (
-          <>
-            <div className="flex gap-2 justify-start items-center mt-4 w-full">
-              <PaymentIcon type="generic" format="flatRounded" width={32} />
-              <input
-                type="text"
-                className="border rounded px-3 py-2 max-w-[380px] w-full"
-                placeholder="Card Number"
-                aria-labelledby="card-number"
-                value={cardNumber}
-                onChange={e => setCardNumber(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block mb-2 font-semibold">Cardholder Name</label>
-              <input
-                type="text"
-                className="border rounded px-3 py-2 max-w-[420px] w-full"
-                placeholder="Cardholder Name"
-                aria-labelledby="cardholder-name"
-                value={holderName}
-                onChange={e => setHolderName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="flex gap-6 justify-start items-center">
-              <div>
-                <label className="block mb-2 text-sm font-semibold">Expiry Date</label>
-                <input
-                  type="text"
-                  className="border rounded px-3 py-2 max-w-[80px]"
-                  placeholder="MM/YY"
-                  aria-labelledby="expiry-date"
-                  value={expiry}
-                  onChange={e => setExpiry(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-semibold">CVC</label>
-                <input
-                  type="text"
-                  className="border rounded px-3 py-2 max-w-[80px]"
-                  placeholder="CVC"
-                  aria-labelledby="cvc"
-                  value={cvc}
-                  onChange={e => setCvc(e.target.value)}
-                  required
-                />
-              </div>
-              <PaymentIcon type="code" format="flatRounded" width={32} className="mt-7" />
-            </div>
-
-            <div className="flex items-center gap-3 mt-2">
-              <PaymentIcon type="visa" format="logo" width={32} />
-              <PaymentIcon type="mastercard" format="logo" width={32} />
-              <PaymentIcon type="amex" format="flatRounded" width={32} />
-              <PaymentIcon type="discover" format="flatRounded" width={32} />
-              <PaymentIcon type="jcb" format="logo" width={36} />
-              <PaymentIcon type="diners" format="logo" width={36} />
-            </div>
-
-            <div className="text-sm text-gray-400">Fake card for demo: 4242 4242 4242 4242</div>
-            <div className="text-xs text-yellow-700 mt-2 bg-yellow-50 p-2 rounded">
-              The payment method must be under the renter's name and physically presented at pickup. Debit cards are accepted for select vehicle classes, and <span className="underline font-medium">additional documentation</span> may be required in some cases.
-            </div>
-          </>
-        )}
-        {paymentMethod === "pix" && (
-          <div className="w-full text-center px-5 py-7">
-            <div className="text-2xl font-bold text-blue-600 mb-2 flex justify-center items-center gap-2">
-              <MdPix /> PIX
-            </div>
-            <div className="mb-3">
-              <span className="font-semibold">PIX key:</span>
-              <span className="ml-2 bg-blue-50 px-2 py-1 rounded">{pixKey}</span>
-            </div>
-            <div className="text-gray-500 text-sm">Simulated: Copy the key and confirm</div>
-            <div className="text-xs text-yellow-700 mt-2 bg-yellow-50 p-2 rounded">
-              The payment method must be under the renter's name and physically presented at pickup. Debit cards are accepted for select vehicle classes, and <span className="underline font-medium">additional documentation</span> may be required in some cases.
-            </div>
-          </div>
-        )}
-        {paymentMethod === "paypal" && (
-          <>
-            <div className="flex items-center gap-2 mb-2 text-lg font-bold text-blue-500">
-              <FaPaypal /> PayPal (demo)
-            </div>
-            <input
-              type="email"
-              className="border rounded px-3 py-2"
-              placeholder="PayPal Email"
-              value={paypalEmail}
-              onChange={e => setPaypalEmail(e.target.value)}
-              required
-            />
-            <div className="text-xs text-yellow-700 mt-2 bg-yellow-50 p-2 rounded">
-              The payment method must be under the renter's name and physically presented at pickup. Debit cards are accepted for select vehicle classes, and <span className="underline font-medium">additional documentation</span> may be required in some cases.
-            </div>
-          </>
-        )}
-
-        <button
-          type="submit"
-          className="mt-4 w-full bg-blue-600 text-white py-3 rounded-full font-bold hover:bg-blue-700 transition"
-          disabled={loading}
-        >
-          {loading ? <FaSpinner className="animate-spin mr-2" /> : "Confirm Payment"}
-        </button>
-      </form>
     </div>
   );
 };

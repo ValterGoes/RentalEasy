@@ -149,12 +149,33 @@ const AdvancedFilterMobile = (props) => {
     const navigate = useNavigate();
 
     const handleShowItems = () => {
-        const { location, selectedCategories, pickupDate, returnDate } = props;
+
+        let { location, selectedCategories, pickupDate, pickupTime, returnDate, returnTime, returnLocation, diffReturn } = props;
+
+        if (!diffReturn || !returnLocation) {
+            returnLocation = location;
+        }
+
+        console.log("AdvancedFilterMobile - Valores antes de adicionar aos params:");
+        console.log("  location:", location);
+        console.log("  returnLocation (final):", returnLocation);
+        console.log("  pickupDate:", pickupDate);
+        console.log("  pickupTime:", pickupTime);
+        console.log("  returnDate:", returnDate);
+        console.log("  returnTime:", returnTime);
+        console.log("  diffReturn (original):", diffReturn);
+
         const params = new URLSearchParams();
+
         if (location) params.append("location", location);
         if (selectedCategories.length > 0) params.append("categories", selectedCategories.join(","));
         if (pickupDate) params.append("pickupDate", pickupDate);
+        if (pickupTime) params.append("pickupTime", pickupTime);
         if (returnDate) params.append("returnDate", returnDate);
+        if (returnTime) params.append("returnTime", returnTime);
+        if (returnLocation) params.append("returnLocation", returnLocation);
+
+        console.log("AdvancedFilterMobile - Parâmetros enviados para /items:", params.toString());
 
         setShowMobileModal(false);
         setMobileStep(1);
@@ -162,7 +183,8 @@ const AdvancedFilterMobile = (props) => {
         if (user) {
             navigate(`/items?${params.toString()}`);
         } else {
-            navigate(`/login?redirect=/items?${params.toString()}`);
+            // navigate(`/login?redirect=/items?${params.toString()}`);
+            navigate(`/items?${params.toString()}`);
         }
     };
 

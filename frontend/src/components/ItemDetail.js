@@ -5,18 +5,59 @@ import API_BASE_URL from "../config";
 import { FaArrowLeft } from "react-icons/fa";
 import ReserveModal from "./ReserveModal";
 
-const ItemDetail = () => {
+const ItemDetail = ({ availableLocations }) => {
   const { id } = useParams();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
+
   const pickupDateFromQuery = query.get("pickupDate") || "";
+  const pickupTimeFromQuery = query.get("pickupTime") || "09:00";
   const returnDateFromQuery = query.get("returnDate") || "";
+  const returnTimeFromQuery = query.get("returnTime") || "09:00";
+  const pickupLocationFromQuery = query.get("pickupLocation") || query.get("location") || "";
+  const returnLocationFromQuery = query.get("returnLocation") || "";
+  const firstNameFromQuery = query.get("firstName") || "";
+  const lastNameFromQuery = query.get("lastName") || "";
+  const emailFromQuery = query.get("email") || "";
+  const phoneFromQuery = query.get("phone") || "";
+  const countryFromQuery = query.get("country") || "";
+  const addressFromQuery = query.get("address") || "";
+  const cityFromQuery = query.get("city") || "";
+  const stateFromQuery = query.get("state") || "";
+  const zipFromQuery = query.get("zip") || "";
+  const countryAddressFromQuery = query.get("countryAddress") || "";
+  const notifyFromQuery = query.get("notify") || "yes";
+  const isAdultFromQuery = query.get("isAdult") === "true";
+  const cardNumberFromQuery = query.get("cardNumber") || "";
+  const holderNameFromQuery = query.get("holderName") || "";
+  const expiryFromQuery = query.get("expiry") || "";
+  const cvcFromQuery = query.get("cvc") || "";
+  const paypalEmailFromQuery = query.get("paypalEmail") || "";
+  const categoriesFromQuery = query.get("categories") || "";
+
+  const editMode = query.get("editMode") === "true"; 
+
   const navigate = useNavigate();
 
   const [item, setItem] = useState(null);
   const [mainImage, setMainImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+
+  // --- NOVO LOG DE DEPURACÃO ---
+  useEffect(() => {
+    console.log("ItemDetail - Parâmetros da URL recebidos:");
+    console.log("  pickupDateFromQuery:", pickupDateFromQuery);
+    console.log("  pickupTimeFromQuery:", pickupTimeFromQuery);
+    console.log("  returnDateFromQuery:", returnDateFromQuery);
+    console.log("  returnTimeFromQuery:", returnTimeFromQuery);
+    console.log("  pickupLocationFromQuery:", pickupLocationFromQuery);
+    console.log("  returnLocationFromQuery:", returnLocationFromQuery); 
+      if (editMode) {
+        setShowModal(true);
+      }
+  }, [location.search, editMode]);
+  // --- FIM DO NOVO LOG ---
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/items/${id}`)
@@ -57,7 +98,7 @@ const ItemDetail = () => {
 
       <div className="flex flex-col md:flex-row gap-10">
         <div className="flex-1">
-          <div className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden bg-gray-100 shadow mb-4">
+          <div className="relative w-full h-62 md:h-96 rounded-2xl overflow-hidden bg-gray-100 shadow mb-4">
             <img
               src={mainImage}
               alt={item.name}
@@ -113,8 +154,32 @@ const ItemDetail = () => {
       {showModal && (
         <ReserveModal
           item={item}
-          pickupDateDefault={pickupDateFromQuery}
-          returnDateDefault={returnDateFromQuery}
+          initialData={{
+            pickupDate: pickupDateFromQuery,
+            pickupTime: pickupTimeFromQuery,
+            returnDate: returnDateFromQuery,
+            returnTime: returnTimeFromQuery,
+            pickupLocation: pickupLocationFromQuery,
+            returnLocation: returnLocationFromQuery,
+            firstName: firstNameFromQuery,
+            lastName: lastNameFromQuery,
+            email: emailFromQuery,
+            phone: phoneFromQuery,
+            country: countryFromQuery, 
+            address: addressFromQuery,
+            city: cityFromQuery,
+            state: stateFromQuery,
+            zip: zipFromQuery,
+            countryAddress: countryAddressFromQuery, 
+            notify: notifyFromQuery,
+            isAdult: isAdultFromQuery,
+            cardNumber: cardNumberFromQuery,
+            holderName: holderNameFromQuery,
+            expiry: expiryFromQuery,
+            cvc: cvcFromQuery,
+            paypalEmail: paypalEmailFromQuery,
+            categories: categoriesFromQuery,
+          }}
           onClose={() => setShowModal(false)}
           onConfirm={(reservationData) => {
             setShowModal(false);
@@ -122,11 +187,16 @@ const ItemDetail = () => {
             const params = new URLSearchParams({
               itemId: item.id,
               pickupDate: reservationData.pickupDate,
+              pickupTime: reservationData.pickupTime,
               returnDate: reservationData.returnDate,
+              returnTime: reservationData.returnTime,
+              pickupLocation: reservationData.pickupLocation,
+              returnLocation: reservationData.returnLocation,
               firstName: reservationData.firstName,
               lastName: reservationData.lastName,
               email: reservationData.email,
               phone: reservationData.phone,
+              country: reservationData.country, // Incluído country
               address: reservationData.address,
               city: reservationData.city,
               state: reservationData.state,
@@ -137,12 +207,16 @@ const ItemDetail = () => {
               cardNumber: reservationData.cardNumber,
               holderName: reservationData.holderName,
               expiry: reservationData.expiry,
-              cvc: reservationData.cvc
+              cvc: reservationData.cvc,
+              isAdult: String(reservationData.isAdult),
+              paypalEmail: reservationData.paypalEmail,
+              categories: categoriesFromQuery,
             });
 
             navigate(`/checkout?${params.toString()}`);
 
           }}
+          availableLocations={availableLocations}
         />
       )}
     </div>

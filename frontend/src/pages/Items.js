@@ -6,41 +6,70 @@ import API_BASE_URL from '../config';
 const Items = () => {
   const locationHook = useLocation();
   const query = new URLSearchParams(locationHook.search);
+  
+  const categoriesFilterRow = query.get("categories") || "";
 
   const locationFilter = query.get("location") || "";
-  const categoriesFilterRaw = query.get("categories") || "";
-  const categoriesFilter = categoriesFilterRaw
-    ? categoriesFilterRaw.split(",").map(c => c.trim())
+  const returnLocation = query.get("returnLocation") || "";
+
+  const categoriesFilter = categoriesFilterRow
+    ? categoriesFilterRow.split(",").map(c => c.trim())
     : [];
-  const pickupDate = query.get("pickupDate");
-  const returnDate = query.get("returnDate");
+
+  const pickupDate = query.get("pickupDate") || "";
+  const pickupTime = query.get("pickupTime") || "";
+  const returnDate = query.get("returnDate") || "";
+  const returnTime = query.get("returnTime") || "";
 
   const filtrosSelecionados =
     (categoriesFilter && categoriesFilter.length > 0) &&
-    pickupDate && returnDate;
+    !!pickupDate && !!returnDate &&
+    !!pickupTime && !!returnTime &&
+    !!locationFilter;
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [availableLocations, setAvailableLocations] = useState([]);
+
+  const normalizeString = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  };
 
   useEffect(() => {
-    if (!filtrosSelecionados) return;
+    axios.get(`${API_BASE_URL}/api/locations`)
+      .then(response => {
+        setAvailableLocations(response.data);
+      })
+      .catch(error => {
+        console.error("Erro ao buscar localizações:", error);
+        setAvailableLocations([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!filtrosSelecionados) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     axios.get(`${API_BASE_URL}/api/items`)
       .then(response => {
         let filtered = response.data;
 
-        filtered = filtered.filter(item => item.isAvailable && item.location);
+        filtered = filtered.filter(item => item.isAvailable);
 
         if (locationFilter) {
+          const normalizedLocationFilter = normalizeString(locationFilter);
           filtered = filtered.filter(item =>
-            item.location.toLowerCase() === locationFilter.toLowerCase()
+            item.location && normalizeString(item.location).includes(normalizedLocationFilter)
           );
         }
 
         if (categoriesFilter.length > 0) {
           filtered = filtered.filter(item =>
-            categoriesFilter.some(cat => item.category.toLowerCase() === cat.toLowerCase())
+            categoriesFilter.some(cat => item.category && normalizeString(item.category).includes(normalizeString(cat)))
           );
         }
 
@@ -50,10 +79,13 @@ const Items = () => {
       .finally(() => setLoading(false));
 
   }, [
+    categoriesFilterRow,
     locationFilter,
-    categoriesFilterRaw,
+    returnLocation,
     pickupDate,
+    pickupTime,
     returnDate,
+    returnTime,
     filtrosSelecionados,
   ]);
 
@@ -82,7 +114,15 @@ const Items = () => {
           {items.map(item => (
             <Link
               key={item.id}
-              to={`/items/${item.id}?pickupDate=${pickupDate}&returnDate=${returnDate}`}
+              to={`/items/${item.id}?` +
+                `categories=${categoriesFilterRow}&` +
+                `location=${locationFilter}&` +
+                `returnLocation=${returnLocation}&` +
+                `pickupDate=${pickupDate}&` +
+                `pickupTime=${pickupTime}&` +
+                `returnDate=${returnDate}&` +
+                `returnTime=${returnTime}`
+              }
               className="group border rounded-2xl shadow bg-white overflow-hidden block focus:outline-none focus:ring-2 focus:ring-blue-400
                 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
               tabIndex={0}
