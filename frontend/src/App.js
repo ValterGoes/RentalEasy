@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { auth } from './firebase'; 
+import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import Navbar from './components/Navbar';
@@ -13,13 +13,15 @@ import Register from './pages/Register';
 import Checkout from './pages/Checkout';
 import SplashScreen from './pages/SplashScreen';
 import Home from './pages/Home';
-
+import AuthRequired from './pages/AuthRequired';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth(); 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  return isAuthenticated ? children : <Navigate to={`/auth-required?redirect=${encodeURIComponent(location.pathname + location.search)}`} />;
 };
 
 
@@ -35,10 +37,10 @@ function InitialSplashScreen() {
           navigate("/home", { replace: true });
         }
       });
-      return () => unsubscribe(); 
+      return () => unsubscribe();
     }, 2000);
 
-    return () => clearTimeout(timer); // Limpa o timer
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
@@ -50,7 +52,8 @@ function InitialSplashScreen() {
 function Layout() {
   const location = useLocation();
 
-  const hideLayoutPaths = ['/login', '/register', '/'];
+
+  const hideLayoutPaths = ['/login', '/register', '/', '/auth-required'];
   const shouldShowLayout = !hideLayoutPaths.includes(location.pathname);
 
   return (
@@ -61,13 +64,13 @@ function Layout() {
 
           <Route path="/" element={<InitialSplashScreen />} />
 
-          <Route path="/Home" element={<Home />} />
+          {/* Rotas públicas - Acessíveis a todos */}
+          <Route path="/home" element={<Home />} />
           <Route path="/items" element={<Items />} />
           <Route path="/items/:id" element={<ItemDetail />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
+          <Route path="/auth-required" element={<AuthRequired />} />
 
           <Route path="/homelogged" element={<PrivateRoute><HomeLogged /></PrivateRoute>} />
           <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
