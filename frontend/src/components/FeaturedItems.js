@@ -17,10 +17,10 @@ const FeaturedItems = () => {
 
 
   return (
-      <div className='mb-52'>
+      <div className='mb-52 mt-20'>
           <h2 className="text-3xl font-bold mb-6 text-blue-600">Featured Items</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {items.filter(item => item.isAvailable).slice(0, 8).map(item => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {items.filter(item => item.isAvailable).slice(0, 2).map(item => (
                   <div
                       key={item.id}
                       className="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2
