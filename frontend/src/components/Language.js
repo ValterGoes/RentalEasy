@@ -55,7 +55,7 @@ const Language = () => {
                 </svg>
             </button>
             {langMenuOpen && (
-                <div className="absolute right-0 mt-2 w-40 rounded shadow bg-white border z-[999]">
+                <div className="absolute left-0 w-40 rounded shadow bg-white border z-[999]">
                     {languages.map((lang) => (
                         <button
                             key={lang.code}
