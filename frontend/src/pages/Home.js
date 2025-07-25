@@ -42,7 +42,7 @@ const Home = () => {
                     style={{ backgroundImage: 'url(/images/Backgrounds/RentalEasy3.png)' }}
                 ></div>
 
-                <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-3xl">
+                <div className="relative text-center px-4 sm:px-6 lg:px-8 max-w-3xl">
                     <h1 className="text-4xl md:text-6xl font-bold text-cyan-900 mb-2">
                         Welcome to <strong>RentalEasy</strong>
                     </h1>
