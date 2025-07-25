@@ -3,17 +3,18 @@ import { useEffect } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import HomeLogged from './pages/HomeLogged';
-import Items from './pages/Items';
-import ItemDetail from './components/ItemDetail';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Checkout from './pages/Checkout';
 import SplashScreen from './pages/SplashScreen';
 import Home from './pages/Home';
+import HomeLogged from './pages/HomeLogged';
+import Navbar from './components/Navbar';
+import ManageBookings from './pages/ManageBookings';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Items from './pages/Items';
+import ItemDetail from './components/ItemDetail';
 import AuthRequired from './pages/AuthRequired';
+import Checkout from './pages/Checkout';
+import Footer from './components/Footer';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -74,6 +75,7 @@ function Layout() {
 
           <Route path="/homelogged" element={<PrivateRoute><HomeLogged /></PrivateRoute>} />
           <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+          <Route path="/managebookings" element={<PrivateRoute><ManageBookings /></PrivateRoute>} />
 
         </Routes>
       </main>
