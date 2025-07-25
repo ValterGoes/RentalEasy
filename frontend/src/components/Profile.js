@@ -6,7 +6,7 @@ import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const profileMenuItems = [
-    { key: 'bookings', label: 'Bookings', to: '/bookings' },
+    { key: 'managebookings', label: 'Manage Bookings', to: '/managebookings' },
     { key: 'subscriptions', label: 'Subscriptions', to: '/subscriptions' },
     { key: 'personal', label: 'Personal Details', to: '/personal-details' },
     { key: 'profiles', label: 'Profiles', to: '/profiles' },
@@ -53,7 +53,7 @@ const Profile = ({ mobile, closeMobileMenu }) => {
       
     
     const renderProfileMenu = () => (
-        <div className="absolute right-0 mt-2 w-56 rounded shadow bg-white border z-[999]">
+        <div className="absolute left-0 w-56 rounded shadow bg-white border z-[999]">
             {profileMenuItems.map(item => (
                 <Link
                     to={item.to}
@@ -84,7 +84,7 @@ const Profile = ({ mobile, closeMobileMenu }) => {
                 onClick={handleProfileClick}
             >
                 <FaRegUserCircle size={24} />
-                <span className="ml-1 text-base font-normal">
+                <span className="ml-1 text-[18px]md:text-lg">
                     {user
                         ? (user.displayName ? user.displayName : t("My Account"))
                         : t("Log in | Register")}
