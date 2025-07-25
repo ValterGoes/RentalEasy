@@ -38,7 +38,7 @@ const HomeLogged = () => {
       ></div>
 
       <div 
-        className="my-16 h-[650px] w-full flex flex-col items-center justify-center z-50 relative"  
+        className="my-16 h-[650px] w-full flex flex-col items-center justify-center relative"  
       >
         <h1 className="text-6xl text-cyan-900 mb-4"> Welcome to <strong>RentalEasy</strong> </h1>
         <p className="text-lg font-medium text-gray-800">Rent bikes, tools, RVs, and more — quickly and effortlessly.</p>
@@ -46,8 +46,8 @@ const HomeLogged = () => {
 
       <div className='mb-52'>
         <h2 className="text-3xl font-bold mb-6 text-blue-600">Featured Items</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {items.filter(item => item.isAvailable).slice(0, 8).map(item => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {items.filter(item => item.isAvailable).slice(0, 4).map(item => (
             <div
               key={item.id}
               className="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2
