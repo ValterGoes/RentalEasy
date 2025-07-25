@@ -1,14 +1,29 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
+import { CgClipboard } from "react-icons/cg";
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 import Language from './Language';
 import Profile from './Profile';
 
 const Navbar = () => {
+
+  const { isAuthenticated, logout } = useAuth();
+
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/home');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
 
   return (
     <nav className="bg-white shadow sticky top-0 z-50">
@@ -35,9 +50,27 @@ const Navbar = () => {
           </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6 text-blue-600 font-bold text-xl">
-          <Language />
-          <Profile />
+        <div className="hidden md:flex items-center space-x-6 text-blue-600 font-base">
+
+          {isAuthenticated ? (
+            <>
+
+              <Link to="/managebookings" className="text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                <CgClipboard className="w-7 h-7" />
+                {t('Manage Bookings')}
+              </Link>
+
+              <Language />
+
+              <Profile />
+            </>
+          ) : (
+            <>
+              <Language />
+
+              <Profile />
+            </>
+          )}
         </div>
 
         {/* Mobile Menu */}
@@ -66,11 +99,38 @@ const Navbar = () => {
               <FaTimes size={24} />
             </button>
           </div>
-          <div className="flex flex-col space-y-6 px-6 mt-6 text-gray-600 font-bold text-2xl">
-            <Link to="/items" className="hover:text-gray-700" onClick={() => setIsOpen(false)}>{t("Browse")}</Link>
-            <Link to="/checkout" className="hover:text-gray-700" onClick={() => setIsOpen(false)}>{t("Checkout")}</Link>
-            <Language />
-            <Profile />
+
+          {/* Links do menu mobile */}
+          <div className="flex flex-col space-y-6 px-6 mt-6 text-gray-600 text-lg">
+
+            {isAuthenticated ? (
+              <>
+
+                <Link to="/managebookings" className="text-gray-600 flex items-center" onClick={() => setIsOpen(false)}>
+                  <CgClipboard className="w-6 h-6" />
+                  {t('Manage Bookings')}
+                </Link>
+ 
+                <Language />
+
+                <Profile closeMobileMenu={() => setIsOpen(false)} />
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 text-gray-600 hover:text-gray-800 font-medium text-lg"
+                >
+                  <FaSignOutAlt className="ml-2" /> {t('Log out')}
+                </button>
+              </>
+            ) : (
+              <>
+
+                <Language />
+
+                <Profile closeMobileMenu={() => setIsOpen(false)} />
+              </>
+            )}
+
           </div>
         </div>
       </div>
