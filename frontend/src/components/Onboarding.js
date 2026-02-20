@@ -19,7 +19,7 @@ const Onboarding = () => {
     {
       title: "Rent with Confidence",
       description: "Secure and transparent booking process, with flexible payment options.",
-      image: "/images/OnboardingBg/segurança.png",
+      image: "/images/OnboardingBg/seguranca.png",
     },
     {
       title: "Start Your Journey!",

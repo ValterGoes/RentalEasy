@@ -31,15 +31,20 @@ function InitialSplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          navigate("/homelogged", { replace: true });
-        } else {
-          navigate("/home", { replace: true });
-        }
-      });
-      return () => unsubscribe();
-    }, 2000);
+      if (auth && typeof auth.onAuthStateChanged === 'function') {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          if (user) {
+            navigate("/homelogged", { replace: true });
+          } else {
+            navigate("/home", { replace: true });
+          }
+        });
+        return () => unsubscribe();
+      } else {
+        console.warn("Auth is not available, redirecting to home.");
+        navigate("/home", { replace: true });
+      }
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
