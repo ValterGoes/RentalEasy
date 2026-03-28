@@ -1,8 +1,8 @@
 # RentalEasy
 
-> **Status:** This project is under active development. Features may be incomplete or subject to change.
+> **Status:** Este projeto está em desenvolvimento ativo. Os recursos podem estar incompletos ou sujeitos a alterações.
 
-RentalEasy is a modern web and mobile platform for renting vehicles, bikes, tools, and more.
+RentalEasy é uma plataforma moderna para web e dispositivos móveis para alugar veículos, bicicletas, ferramentas e muito mais.
 
 ## How to run
 
