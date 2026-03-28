@@ -1,21 +1,52 @@
 # RentalEasy
 
+> **Status:** This project is under active development. Features may be incomplete or subject to change.
+
 RentalEasy is a modern web and mobile platform for renting vehicles, bikes, tools, and more.
 
-## 🚀 How to run
+## How to run
+
+### 1. Configure environment variables
+
+Create a `.env` file inside the `frontend/` folder with your Firebase credentials:
+
+```env
+REACT_APP_FIREBASE_API_KEY=your_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REACT_APP_FIREBASE_APP_ID=your_app_id
+REACT_APP_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+You can find these credentials in the [Firebase Console](https://console.firebase.google.com/) > Project Settings.
+
+### 2. Install dependencies
 
 ```bash
-# Install dependencies
 cd frontend
 npm install
 
 cd ../backend
 npm install
+```
 
-# Run frontend (React)
-cd ../frontend
+### 3. Run the application
+
+```bash
+# Run frontend (React) — runs on http://localhost:3000
+cd frontend
 npm start
 
-# Run backend (Node/Express)
-cd ../backend
+# Run backend (Node/Express) — runs on http://localhost:5002
+cd backend
 npm start
+```
+
+## Tech Stack
+
+- **Frontend:** React, Tailwind CSS, React Router, i18next
+- **Backend:** Node.js, Express
+- **Auth:** Firebase Authentication
+- **HTTP Client:** Axios
