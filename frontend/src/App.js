@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { auth } from './firebase';
+import { auth, isFirebaseConfigured } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import SplashScreen from './pages/SplashScreen';
@@ -31,7 +31,7 @@ function InitialSplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (auth && typeof auth.onAuthStateChanged === 'function') {
+      if (isFirebaseConfigured && auth) {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           if (user) {
             navigate("/homelogged", { replace: true });
@@ -41,12 +41,20 @@ function InitialSplashScreen() {
         });
         return () => unsubscribe();
       } else {
-        console.warn("Auth is not available, redirecting to home.");
+        console.warn("Firebase not configured, redirecting to home.");
         navigate("/home", { replace: true });
       }
     }, 3000);
 
-    return () => clearTimeout(timer);
+    // Fallback: se após 6s ainda estiver na splash, redireciona
+    const fallback = setTimeout(() => {
+      navigate("/home", { replace: true });
+    }, 6000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(fallback);
+    };
   }, [navigate]);
 
   return (

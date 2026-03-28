@@ -1,4 +1,3 @@
-
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
@@ -11,7 +10,17 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
-  
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const isFirebaseConfigured = !!firebaseConfig.apiKey;
+
+let app = null;
+let auth = null;
+
+if (isFirebaseConfigured) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+} else {
+    console.warn('Firebase not configured. Check your .env file.');
+}
+
+export { auth, isFirebaseConfigured };
